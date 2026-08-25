@@ -350,17 +350,13 @@ tbody th { font-weight: 600; }
 .featured-video { margin-top: 1rem; }
 .featured-video .video-card { margin-inline: auto; max-width: 900px; }
 
-.platform-list { display: grid; gap: 1rem; margin: 3rem 0 1rem; }
-.platform-card { background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; display: grid; gap: 1.2rem; grid-template-columns: 0.72fr 1.6fr; overflow: hidden; padding: 1.15rem; }
-.platform-card:nth-child(even) { grid-template-columns: 1.6fr 0.72fr; }
-.platform-card:nth-child(even) .platform-copy { order: 2; }
+.platform-list { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 3rem 0 1rem; }
+.platform-card { background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; overflow: hidden; padding: 1.15rem; }
 .platform-copy { padding: 1rem; }
 .platform-copy h3 { font-family: var(--serif); font-size: 2.1rem; margin: 0.3rem 0 0.8rem; }
 .platform-copy p { color: var(--muted); font-size: 0.88rem; }
 .platform-copy ul { display: flex; flex-wrap: wrap; gap: 0.45rem; list-style: none; margin: 1.5rem 0 0; padding: 0; }
 .platform-copy li { background: var(--paper); border-radius: 999px; font-size: 0.72rem; padding: 0.35rem 0.65rem; }
-.platform-figure { box-shadow: none; }
-.platform-figure figcaption { font-size: 0.74rem; }
 .real-video-grid + .table-card { margin-top: 1rem; }
 .protocol-note { align-items: start; background: var(--ink); border-radius: 1rem; color: white; display: grid; gap: 2rem; grid-template-columns: 0.35fr 1.65fr; margin-top: 1rem; padding: 1.5rem; }
 .protocol-note span { color: #8ed0cb; }
@@ -503,8 +499,7 @@ tbody th { font-weight: 600; }
   .ablation-chart-heading { align-items: start; flex-direction: column; gap: 0.25rem; }
   .ablation-chart-heading p { white-space: normal; }
   .ablation-chart-canvas { height: 340px; }
-  .platform-card, .platform-card:nth-child(even) { grid-template-columns: 1fr; }
-  .platform-card:nth-child(even) .platform-copy { order: initial; }
+  .platform-list { grid-template-columns: 1fr; }
   .protocol-note { grid-template-columns: 1fr; }
   .subsection-heading { align-items: start; flex-direction: column; gap: 0.8rem; }
 }

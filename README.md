@@ -77,7 +77,7 @@ For a main paper video, copy the file to `assets/videos/`, then replace `introdu
 }
 ```
 
-The page hides unconfigured media cleanly. Each entry may also define `type` and `note` fields, which are rendered as provenance-aware card metadata. Simulation media can be filtered by benchmark, and only one video plays at a time. No JavaScript edit is needed when a video is added through the manifest.
+The page hides unconfigured media cleanly. Each entry may also define `type` and `note` fields, which are rendered as provenance-aware card metadata. Simulation media can be filtered by benchmark. Videos are muted, loop automatically, and play while their cards are visible in the viewport. No JavaScript edit is needed when a video is added through the manifest.
 
 The current simulation gallery contains twelve videos: the eight RoboTwin paper tasks, one additional Handover Mic rollout, and three ManiSkill tasks. The real-robot gallery contains AGIBOT G1 CMAP executions plus a clearly labeled Leju Kuavo 4 Pro expert demonstration. Supplemental videos copied directly into `assets/videos/` are not overwritten by manuscript synchronization; only files listed in `config/sync.manifest.json` are refreshed from the read-only manuscript repository.
 
@@ -87,7 +87,7 @@ The three AGIBOT G1 display clips use a consistent `640 × 380` crop that remove
 
 The CMAP method explorer is driven by `method.stages` in `data/paper.curated.json`. Each stage defines a `panel` label and a percentage-based `focus` rectangle (`left`, `top`, `width`, `height`). Editing those values updates the highlighted region without changing the manuscript figure itself. The stage controls support mouse, touch, and arrow-key navigation.
 
-The Ablations section is driven by `ablations.views`. Each view supplies chart-ready series, selectable metrics, and explanations. The component view is drawn as an animated Canvas line chart, while the task view is drawn as an animated grouped bar chart. Selecting a numbered control or clicking a chart category updates the highlight and exact metrics; the play/pause control steps through the sequence automatically. Values remain centralized in `data/paper.curated.json`, and reduced-motion preferences are respected.
+The Ablations section is driven by `ablations.views`. Each view supplies chart-ready series, selectable metrics, and explanations. The component view is drawn as an animated Canvas line chart that reveals one new segment from 01 through 04; future points remain hidden until their step. The task view is drawn as an animated grouped bar chart. Selecting a numbered control or clicking a chart category updates the highlight and exact metrics; the play/pause control steps through the sequence automatically. Values remain centralized in `data/paper.curated.json`, and reduced-motion preferences are respected.
 
 ## REVIEW_MODE
 

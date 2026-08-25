@@ -111,7 +111,7 @@
       {
         "id": "components",
         "title": "Component build-up",
-        "description": "Follow the matched progression from ACT to the complete CMAP policy. Select a stage to isolate its position in the aggregate comparison.",
+        "description": "Advance from 01 to 04 to reveal the component trajectory one segment at a time, from ACT to the complete CMAP policy.",
         "figure_key": "ablation",
         "chart": {
           "type": "line",
@@ -125,7 +125,7 @@
             {"label": "RoboTwin", "color": "#2b5f82", "values": [33.4, 39.5, 41.1, 49.3]},
             {"label": "ManiSkill", "color": "#dc5a5a", "values": [26.0, 45.3, 43.0, 53.3]}
           ],
-          "source_note": "Replotted from the manuscript component ablation data. Select a stage or play the sequence to animate the comparison."
+          "source_note": "Replotted from the manuscript component ablation data. Each numbered stage reveals only the next segment of the comparison."
         },
         "items": [
           {

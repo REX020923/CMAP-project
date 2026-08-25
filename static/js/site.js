@@ -164,7 +164,7 @@ function videoCard(item) {
   return `
     <article class="video-card" data-media-group="${escapeHtml(item.group)}">
       <div class="video-frame">
-        <video controls muted loop playsinline preload="metadata" aria-label="${escapeHtml(item.title)} rollout video">
+        <video controls autoplay muted loop playsinline preload="auto" aria-label="${escapeHtml(item.title)} rollout video">
           <source src="${escapeHtml(item.src)}" type="video/mp4" />
         </video>
       </div>
@@ -201,8 +201,7 @@ function renderSimulation(paper, media) {
   const videos = (media.simulation_videos || []).filter((item) => item.src);
   return `
     <section class="section" id="simulation" aria-labelledby="simulation-heading">
-      ${sectionIntro(3, "Evaluation", simulation.heading, simulation.summary).replace("<h2>", '<h2 id="simulation-heading">')}
-      ${paperFigure(paper.figures.simulation, "wide-figure")}
+      ${sectionIntro(4, "Evaluation", simulation.heading, simulation.summary).replace("<h2>", '<h2 id="simulation-heading">')}
       <div class="results-grid">
         ${simulation.tables.map(resultsTable).join("")}
       </div>
@@ -216,8 +215,7 @@ function renderSimulation(paper, media) {
     </section>`;
 }
 
-function platformCard(platform, figures) {
-  const figure = figures[platform.figure_key];
+function platformCard(platform) {
   return `
     <article class="platform-card">
       <div class="platform-copy">
@@ -226,7 +224,6 @@ function platformCard(platform, figures) {
         <p>${escapeHtml(platform.description)}</p>
         <ul>${platform.tasks.map((task) => `<li>${escapeHtml(task)}</li>`).join("")}</ul>
       </div>
-      ${paperFigure(figure, "platform-figure")}
     </article>`;
 }
 
@@ -235,8 +232,8 @@ function renderRealWorldWithMedia(paper, media) {
   const videos = (media.real_robot_videos || []).filter((item) => item.src);
   return `
     <section class="section" id="real-world" aria-labelledby="real-heading">
-      ${sectionIntro(4, "Physical deployment", section.heading, section.summary).replace("<h2>", '<h2 id="real-heading">')}
-      <div class="platform-list">${section.platforms.map((platform) => platformCard(platform, paper.figures)).join("")}</div>
+      ${sectionIntro(3, "Physical deployment", section.heading, section.summary).replace("<h2>", '<h2 id="real-heading">')}
+      <div class="platform-list">${section.platforms.map(platformCard).join("")}</div>
       ${
         videos.length
           ? `<div class="subsection-heading"><div><span>Physical rollouts</span><h3>Real-robot videos</h3></div><p>AGIBOT G1 CMAP executions and a clearly labeled Leju Kuavo 4 Pro expert demonstration.</p></div>
@@ -396,32 +393,55 @@ function drawAblationChart(canvas, chart, activeIndex, progress = 1) {
 
   if (isLine) {
     chart.series.forEach((series) => {
+      const pointAt = (index) => ({
+        x: categoryX(index),
+        y: yPosition(Number(series.values[index])),
+      });
+      const firstPoint = pointAt(0);
+      let activePoint = firstPoint;
+
       context.strokeStyle = series.color;
       context.lineWidth = 2.6;
       context.lineJoin = "round";
       context.lineCap = "round";
       context.beginPath();
-      series.values.forEach((value, index) => {
-        const animatedValue = yMin + (Number(value) - yMin) * progress;
-        const x = categoryX(index);
-        const y = yPosition(animatedValue);
-        if (index === 0) context.moveTo(x, y);
-        else context.lineTo(x, y);
-      });
-      context.stroke();
+      context.moveTo(firstPoint.x, firstPoint.y);
+      for (let index = 1; index < activeIndex; index += 1) {
+        const completedPoint = pointAt(index);
+        context.lineTo(completedPoint.x, completedPoint.y);
+      }
+      if (activeIndex > 0) {
+        const previousPoint = pointAt(activeIndex - 1);
+        const targetPoint = pointAt(activeIndex);
+        activePoint = {
+          x: previousPoint.x + (targetPoint.x - previousPoint.x) * progress,
+          y: previousPoint.y + (targetPoint.y - previousPoint.y) * progress,
+        };
+        context.lineTo(activePoint.x, activePoint.y);
+        context.stroke();
+      }
 
-      series.values.forEach((value, index) => {
-        const animatedValue = yMin + (Number(value) - yMin) * progress;
-        const x = categoryX(index);
-        const y = yPosition(animatedValue);
+      for (let index = 0; index < activeIndex; index += 1) {
+        const completedPoint = pointAt(index);
         context.beginPath();
         context.fillStyle = "#fbfcf9";
         context.strokeStyle = series.color;
-        context.lineWidth = index === activeIndex ? 3 : 2;
-        context.arc(x, y, index === activeIndex ? 6 : 4.5, 0, Math.PI * 2);
+        context.lineWidth = 2;
+        context.arc(completedPoint.x, completedPoint.y, 4.5, 0, Math.PI * 2);
         context.fill();
         context.stroke();
-      });
+      }
+
+      context.save();
+      context.globalAlpha = activeIndex === 0 ? Math.max(0.15, progress) : 1;
+      context.beginPath();
+      context.fillStyle = "#fbfcf9";
+      context.strokeStyle = series.color;
+      context.lineWidth = 3;
+      context.arc(activePoint.x, activePoint.y, 6, 0, Math.PI * 2);
+      context.fill();
+      context.stroke();
+      context.restore();
     });
     if (progress > 0.72) {
       chart.series.forEach((series, seriesIndex) => {
@@ -429,11 +449,14 @@ function drawAblationChart(canvas, chart, activeIndex, progress = 1) {
         const otherValue = Number(chart.series[(seriesIndex + 1) % chart.series.length]?.values?.[activeIndex]);
         const placement = value > otherValue || (value === otherValue && seriesIndex === 0) ? "above" : "below";
         const edge = activeIndex === 0 ? "start" : activeIndex === categoryCount - 1 ? "end" : "middle";
-        const animatedValue = yMin + (value - yMin) * progress;
+        const previousValue = activeIndex > 0 ? Number(series.values[activeIndex - 1]) : value;
+        const animatedValue = previousValue + (value - previousValue) * progress;
+        const previousX = categoryX(Math.max(0, activeIndex - 1));
+        const animatedX = activeIndex > 0 ? previousX + (categoryX(activeIndex) - previousX) * progress : categoryX(0);
         drawCanvasValueTag(
           context,
           `${formatChartValue(value)}%`,
-          categoryX(activeIndex),
+          animatedX,
           yPosition(animatedValue),
           series.color,
           placement,
@@ -870,7 +893,13 @@ function setupMediaFilters() {
         cards.forEach((card) => {
           const shouldShow = value === "all" || card.dataset.mediaGroup === value;
           card.hidden = !shouldShow;
-          if (!shouldShow) card.querySelector("video")?.pause();
+          const video = card.querySelector("video");
+          if (!shouldShow) {
+            video?.pause();
+          } else if (video) {
+            const bounds = video.getBoundingClientRect();
+            if (bounds.bottom > 0 && bounds.top < window.innerHeight) video.play().catch(() => {});
+          }
         });
       });
     });
@@ -879,11 +908,34 @@ function setupMediaFilters() {
 
 function setupVideoPlayback() {
   const videos = [...document.querySelectorAll("video")];
-  videos.forEach((video) => {
-    video.addEventListener("play", () => {
-      videos.forEach((candidate) => {
-        if (candidate !== video) candidate.pause();
-      });
+  const playVideo = (video) => {
+    if (!video.closest("[hidden]")) video.play().catch(() => {});
+  };
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.15 && !video.closest("[hidden]")) playVideo(video);
+          else video.pause();
+        });
+      },
+      {threshold: [0, 0.15, 0.5]},
+    );
+    videos.forEach((video) => observer.observe(video));
+  } else {
+    videos.forEach(playVideo);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    videos.forEach((video) => {
+      if (document.hidden) {
+        video.pause();
+        return;
+      }
+      const bounds = video.getBoundingClientRect();
+      if (bounds.bottom > 0 && bounds.top < window.innerHeight) playVideo(video);
     });
   });
 }
@@ -936,8 +988,8 @@ function setupSectionNavigation() {
 function renderExtendedContent(paper, site, media) {
   document.querySelector("#extended-content").innerHTML = [
     renderMethod(paper, media),
-    renderSimulation(paper, media),
     renderRealWorldWithMedia(paper, media),
+    renderSimulation(paper, media),
     renderAblations(paper),
     renderCases(paper, media),
     renderCitation(paper, site),

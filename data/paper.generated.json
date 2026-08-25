@@ -361,7 +361,7 @@
       {
         "id": "components",
         "title": "Component build-up",
-        "description": "Follow the matched progression from ACT to the complete CMAP policy. Select a stage to isolate its position in the aggregate comparison.",
+        "description": "Advance from 01 to 04 to reveal the component trajectory one segment at a time, from ACT to the complete CMAP policy.",
         "figure_key": "ablation",
         "chart": {
           "type": "line",
@@ -398,7 +398,7 @@
               ]
             }
           ],
-          "source_note": "Replotted from the manuscript component ablation data. Select a stage or play the sequence to animate the comparison."
+          "source_note": "Replotted from the manuscript component ablation data. Each numbered stage reveals only the next segment of the comparison."
         },
         "items": [
           {
@@ -658,49 +658,49 @@
     "hero": {
       "path": "assets/figures/fig1-cmap-overview.svg",
       "alt": "Conceptual comparison between conventional action-chunk generation and CMAP.",
-      "caption": "Conceptual comparison between conventional action-chunk generation and CMAP. Conventional policies predict a future action chunk without explicitly revising local errors, whereas CMAP conditions prediction on executed-action history and regenerates a selected future span while preserving the remaining actions.",
+      "caption": "CMAP versus conventional action-chunk prediction. CMAP uses executed history to select and regenerate an uncertain future span while preserving the rest of the chunk.",
       "label": "fig:concept"
     },
     "method": {
       "path": "assets/figures/fig2-cmap-method.svg",
       "alt": "Overview of the CMAP predict-select-regenerate pipeline.",
-      "caption": "Overview of CMAP. (A) The current observation and visible executed-action history of length H condition a coarse prediction of K future actions and per-step span-selection scores. (B) Contiguous future windows are ranked by their mean scores, and the highest-scoring window defines the selected span R. (C) The local refiner regenerates only R, merges it with the preserved coarse actions, and executes the resulting action tape with receding-horizon control.",
+      "caption": "CMAP pipeline. (a) Observation and executed history condition a coarse K-step prediction and span scores. (b) The highest-scoring contiguous window defines R. (c) The local refiner regenerates R, preserves other actions, and executes the merged tape with receding-horizon control.",
       "label": "fig:method"
     },
     "simulation": {
       "path": "assets/figures/fig5-simulation-tasks.png",
       "alt": "Simulation tasks in RoboTwin and ManiSkill.",
-      "caption": "Simulation tasks in RoboTwin (top two rows) and ManiSkill (bottom row). ManiSkill frames are sampled from CMAP evaluation rollouts.",
+      "caption": "Simulation tasks: RoboTwin (top) and ManiSkill (bottom). ManiSkill frames come from CMAP evaluation rollouts.",
       "label": "fig:simulation_tasks"
     },
     "ablation": {
       "path": "assets/figures/fig4-ablation.png",
       "alt": "Component ablations on RoboTwin and ManiSkill.",
-      "caption": "Component ablations on the fixed RoboTwin diagnostic suite and ManiSkill. +Hist. adds executed-action history, +Regen adds masked span regeneration, and CMAP adds score-guided span selection; labels report macro-averages and CMAP gains over ACT.",
+      "caption": "Component ablations on RoboTwin and ManiSkill. +Hist. adds executed history; +Regen adds masked span regeneration; CMAP adds score-guided span selection. Labels show macro-averages and CMAP gains over ACT.",
       "label": "fig:ablation"
     },
     "task_ablation": {
       "path": "assets/figures/fig4-task-ablation.png",
       "alt": "Task-level ablations on the RoboTwin diagnostic suite.",
-      "caption": "Task-level ablations on three tasks from the fixed RoboTwin diagnostic suite and its eight-task macro-average. Labels above CMAP show gains over the strongest alternative.",
+      "caption": "Task-level RoboTwin ablations on three diagnostic tasks and the eight-task average. CMAP labels show gains over the best alternative.",
       "label": "fig:robotwin_task_ablation"
     },
     "kuavo": {
       "path": "assets/figures/fig6-kuavo-stages.png",
       "alt": "Four stages of a CMAP rollout for Kuavo 4 Pro Sheet Loading.",
-      "caption": "Four stages of a CMAP rollout for Kuavo 4 Pro Sheet Loading: initialization, alignment, grasp and lift, and placement and release.",
+      "caption": "Kuavo 4 Pro Sheet Loading rollout: initialization, alignment, grasp and lift, and placement and release.",
       "label": "fig:kuavo_stages"
     },
     "agibot": {
       "path": "assets/figures/fig6-agibot-tasks.png",
       "alt": "Representative AGIBOT G1 task rollouts.",
-      "caption": "Representative AGIBOT G1 task rollouts. Columns denote tasks, and rows show successive execution stages.",
+      "caption": "AGIBOT G1 rollouts. Columns are tasks; rows are execution stages.",
       "label": "fig:agibot_tasks"
     },
     "success_failure": {
       "path": "assets/figures/fig7-success-failure.png",
       "alt": "AGIBOT G1 success-failure pairs with contact errors marked.",
-      "caption": "Real-world execution examples on AGIBOT G1 and Kuavo 4 Pro. Top: success. Bottom: failures for Cup Separation, Bell Press, Chess Grasp, and Bottle Grasp, plus a recovered near-failure for Sheet Loading. Red callouts mark critical contact regions.",
+      "caption": "Real-world execution pairs on AGIBOT G1 and Kuavo 4 Pro. Top: success. Bottom: four failures and one recovered near-failure. Red callouts mark critical contact regions.",
       "label": "fig:realworld_failures"
     }
   },
@@ -708,7 +708,7 @@
     "root_tex": "main_ral.tex",
     "compiled_pdf": "main_ral.pdf",
     "bibliography": "ref.bib",
-    "tex_digest_sha256": "3e34ae0f6ad85d04efac6eaf97698aeba61f61dc2ce13654059366d1b963e4b2",
+    "tex_digest_sha256": "5513a5a411f89ab1cd66f3dc1997af3ed550db201429aa7fac337792ef837e15",
     "generated_date": "2026-08-25"
   }
 }
