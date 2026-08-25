@@ -472,14 +472,16 @@ function drawAblationChart(canvas, chart, activeIndex, progress = 1) {
     const barGap = compact ? 1 : 2;
     const barWidth = Math.max(3, (usableWidth - barGap * (chart.series.length - 1)) / chart.series.length);
     chart.categories.forEach((_, categoryIndex) => {
+      if (categoryIndex > activeIndex) return;
       const groupLeft = plot.left + categoryIndex * groupWidth + (groupWidth - usableWidth) / 2;
       chart.series.forEach((series, seriesIndex) => {
         const value = Number(series.values[categoryIndex]);
-        const animatedValue = yMin + (value - yMin) * progress;
+        const categoryProgress = categoryIndex === activeIndex ? progress : 1;
+        const animatedValue = yMin + (value - yMin) * categoryProgress;
         const x = groupLeft + seriesIndex * (barWidth + barGap);
         const y = yPosition(animatedValue);
         const barHeight = plot.top + plot.height - y;
-        context.globalAlpha = categoryIndex === activeIndex ? 1 : 0.4;
+        context.globalAlpha = categoryIndex === activeIndex ? 1 : 0.68;
         context.fillStyle = series.color;
         context.fillRect(x, y, barWidth, barHeight);
         context.globalAlpha = 1;
@@ -502,7 +504,7 @@ function drawAblationChart(canvas, chart, activeIndex, progress = 1) {
   context.textAlign = "center";
   context.textBaseline = "top";
   chart.categories.forEach((label, index) => {
-    context.fillStyle = index === activeIndex ? "#176d64" : "#5e6e6b";
+    context.fillStyle = index === activeIndex ? "#176d64" : index > activeIndex ? "#a7b2af" : "#5e6e6b";
     context.font = `${index === activeIndex ? "700" : "500"} ${compact ? 9 : 10}px Inter, system-ui, sans-serif`;
     const maxLabelWidth = isLine ? Math.max(62, categoryStep * 0.78) : Math.max(54, plot.width / categoryCount - 10);
     const lines = wrappedCanvasLines(context, label, maxLabelWidth);
@@ -804,6 +806,7 @@ function setupAblationExplorer(section) {
     });
     bindItemButtons();
     selectItem(0);
+    if (!reducedMotion.matches) startPlayback();
     if (moveFocus) viewButtons[index].focus();
   };
 
@@ -869,8 +872,15 @@ function setupAblationExplorer(section) {
   } else {
     window.addEventListener("resize", () => renderChart(1));
   }
+  let resumeAfterVisibility = false;
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stopPlayback();
+    if (document.hidden) {
+      resumeAfterVisibility = Boolean(playTimer);
+      stopPlayback();
+    } else if (resumeAfterVisibility && !reducedMotion.matches) {
+      resumeAfterVisibility = false;
+      startPlayback();
+    }
   });
   selectView(0);
 }

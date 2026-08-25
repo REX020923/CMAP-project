@@ -87,7 +87,7 @@ The three AGIBOT G1 display clips use a consistent `640 × 380` crop that remove
 
 The CMAP method explorer is driven by `method.stages` in `data/paper.curated.json`. Each stage defines a `panel` label and a percentage-based `focus` rectangle (`left`, `top`, `width`, `height`). Editing those values updates the highlighted region without changing the manuscript figure itself. The stage controls support mouse, touch, and arrow-key navigation.
 
-The Ablations section is driven by `ablations.views`. Each view supplies chart-ready series, selectable metrics, and explanations. The component view is drawn as an animated Canvas line chart that reveals one new segment from 01 through 04; future points remain hidden until their step. The task view is drawn as an animated grouped bar chart. Selecting a numbered control or clicking a chart category updates the highlight and exact metrics; the play/pause control steps through the sequence automatically. Values remain centralized in `data/paper.curated.json`, and reduced-motion preferences are respected.
+The Ablations section is driven by `ablations.views`. Each view supplies chart-ready series, selectable metrics, and explanations. The component line chart reveals one new segment from 01 through 04, while the grouped bar chart reveals one new task group at each step; future values remain hidden until their step. Both views start their looping sequence automatically when selected. Selecting a numbered control or clicking a chart category pauses playback and updates the highlight and exact metrics, while the play/pause control can resume the sequence. Values remain centralized in `data/paper.curated.json`, and reduced-motion preferences are respected.
 
 ## REVIEW_MODE
 

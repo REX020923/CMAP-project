@@ -157,7 +157,7 @@
       {
         "id": "tasks",
         "title": "Task-level breakdown",
-        "description": "Inspect the three RoboTwin diagnostic tasks and their eight-task macro-average. Each focus reports CMAP and its gain over the strongest alternative.",
+        "description": "Advance from 01 to 04 to reveal one RoboTwin task group at a time, ending with the eight-task macro-average.",
         "figure_key": "task_ablation",
         "chart": {
           "type": "bar",
@@ -175,7 +175,7 @@
             {"label": "RandSpan", "color": "#7cb3a8", "values": [57.0, 75.0, 61.0, 41.1]},
             {"label": "CMAP", "color": "#25946f", "values": [65.0, 92.0, 72.0, 49.3]}
           ],
-          "source_note": "Replotted from the manuscript task-level ablation data. Click a task group to inspect its exact CMAP result and gain."
+          "source_note": "Replotted from the manuscript task-level ablation data. Each numbered stage reveals only the next grouped-bar comparison."
         },
         "items": [
           {
