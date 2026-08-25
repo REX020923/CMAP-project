@@ -1,0 +1,26 @@
+{
+  "hero_video": null,
+  "introduction_video": null,
+  "method_video": null,
+  "simulation_videos": [
+    {"id": "robotwin-beat-block-hammer", "group": "RoboTwin", "type": "CMAP rollout", "title": "Beat Block Hammer", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-beat-block-hammer.mp4"},
+    {"id": "robotwin-pick-dual-bottles", "group": "RoboTwin", "type": "CMAP rollout", "title": "Pick Dual Bottles", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-pick-dual-bottles.mp4"},
+    {"id": "robotwin-handover-mic", "group": "RoboTwin", "type": "CMAP rollout", "title": "Handover Mic", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-handover-mic.mp4"},
+    {"id": "robotwin-handover-mic-alternate", "group": "RoboTwin", "type": "Additional rollout", "title": "Handover Mic · Alternate", "note": "A second representative episode showing rollout variation on the same task.", "src": "assets/videos/robotwin-handover-episode-2.mp4"},
+    {"id": "robotwin-stack-two-blocks", "group": "RoboTwin", "type": "CMAP rollout", "title": "Stack Two Blocks", "note": "One representative episode from the CMAP evaluation run.", "src": "assets/videos/robotwin-stack-two-blocks.mp4"},
+    {"id": "robotwin-open-microwave", "group": "RoboTwin", "type": "CMAP rollout", "title": "Open Microwave", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-open-microwave.mp4"},
+    {"id": "robotwin-click-alarm-clock", "group": "RoboTwin", "type": "CMAP rollout", "title": "Click Alarm Clock", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-click-alarm-clock.mp4"},
+    {"id": "robotwin-open-laptop", "group": "RoboTwin", "type": "CMAP rollout", "title": "Open Laptop", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-open-laptop.mp4"},
+    {"id": "robotwin-place-empty-cup", "group": "RoboTwin", "type": "CMAP rollout", "title": "Place Empty Cup", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-place-empty-cup.mp4"},
+    {"id": "maniskill-push", "group": "ManiSkill", "type": "CMAP rollout", "title": "Push Cube", "note": "One representative episode from the CMAP evaluation run.", "src": "assets/videos/maniskill-push-cube.mp4"},
+    {"id": "maniskill-stack", "group": "ManiSkill", "type": "CMAP rollout", "title": "Stack Cube", "note": "One representative episode from the CMAP evaluation run.", "src": "assets/videos/maniskill-stack-cube.mp4"},
+    {"id": "maniskill-pull", "group": "ManiSkill", "type": "CMAP rollout", "title": "Pull Cube", "note": "One representative episode from the CMAP evaluation run.", "src": "assets/videos/maniskill-pull-cube.mp4"}
+  ],
+  "real_robot_videos": [
+    {"id": "agibot-cup-separation", "group": "AGIBOT G1", "type": "CMAP rollout", "title": "Cup Separation", "note": "Successful physical rollout: the nested cups are separated and placed apart.", "src": "assets/videos/real-agibot-cup-separation.mp4"},
+    {"id": "agibot-bell-press", "group": "AGIBOT G1", "type": "CMAP rollout", "title": "Bell Press", "note": "Representative physical execution retained as qualitative media, not as independently logged success evidence.", "src": "assets/videos/real-agibot-bell-press.mp4"},
+    {"id": "agibot-dual-item-placement", "group": "AGIBOT G1", "type": "CMAP rollout", "title": "Dual-Item Placement", "note": "Successful physical rollout: both tabletop objects are transferred into the tray.", "src": "assets/videos/real-agibot-dual-item-placement.mp4"},
+    {"id": "leju-sheet-loading", "group": "Leju Kuavo 4 Pro", "type": "Expert demonstration", "title": "Sheet Loading", "note": "Validated real-robot demonstration showing the complete approach, grasp, transfer, and placement sequence.", "src": "assets/videos/real-leju-sheet-loading.mp4"}
+  ],
+  "success_failure_videos": []
+}

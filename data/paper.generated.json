@@ -1,0 +1,714 @@
+{
+  "schema_version": 1,
+  "facts": {
+    "robotwin_main_macro": {
+      "display": "61.8%",
+      "label": "Eight-task RoboTwin macro-average"
+    },
+    "maniskill_macro": {
+      "display": "53.3%",
+      "label": "ManiSkill macro-average"
+    },
+    "physical_total": {
+      "display": "38/50",
+      "label": "Successes across five physical outcomes"
+    }
+  },
+  "headline_fact_ids": [
+    "robotwin_main_macro",
+    "maniskill_macro",
+    "physical_total"
+  ],
+  "method": {
+    "heading": "CMAP Method",
+    "summary": "CMAP constructs an action tape by combining executed actions with future action positions. It first predicts a coarse future chunk and a per-step span-selection score, selects the maximizing contiguous window, and regenerates the selected span while retaining all coarse predictions outside it.",
+    "stages": [
+      {
+        "title": "Predict",
+        "panel": "(a) History-Conditioned Coarse Prediction",
+        "description": "The current observation and visible executed-action history condition a coarse prediction of future actions and per-step span-selection scores.",
+        "focus": {
+          "left": 0,
+          "top": 0,
+          "width": 100,
+          "height": 57
+        }
+      },
+      {
+        "title": "Select",
+        "panel": "(b) Uncertainty-Guided Span Selection",
+        "description": "Contiguous future windows are ranked by their mean scores, and the highest-scoring window defines the selected span.",
+        "focus": {
+          "left": 48,
+          "top": 54,
+          "width": 52,
+          "height": 46
+        }
+      },
+      {
+        "title": "Regenerate",
+        "panel": "(c) Local Refinement & Execution",
+        "description": "The local refiner regenerates only the selected span, merges it with preserved coarse actions, and executes the resulting action tape with receding-horizon control.",
+        "focus": {
+          "left": 0,
+          "top": 54,
+          "width": 51,
+          "height": 46
+        }
+      }
+    ]
+  },
+  "simulation": {
+    "heading": "Simulation Experiments",
+    "summary": "We evaluate CMAP on eight RoboTwin tasks and three single-arm ManiSkill tasks, using 50 and 100 expert demonstrations per task, respectively. ACT, DP, and CMAP are each evaluated over 100 episodes per RoboTwin task.",
+    "tables": [
+      {
+        "title": "RoboTwin main comparison",
+        "unit": "Success rate (%)",
+        "columns": [
+          "Method",
+          "Beat Block Hammer",
+          "Pick Dual Bottles",
+          "Handover Mic",
+          "Stack Two Blocks",
+          "Open Microwave",
+          "Click Alarm Clock",
+          "Open Laptop",
+          "Place Empty Cup",
+          "Avg."
+        ],
+        "rows": [
+          {
+            "method": "RDT-1B",
+            "values": [
+              77.0,
+              42.0,
+              90.0,
+              21.0,
+              37.0,
+              61.0,
+              59.0,
+              56.0,
+              55.4
+            ]
+          },
+          {
+            "method": "TwinVLA",
+            "values": [
+              77.0,
+              18.0,
+              84.0,
+              26.0,
+              3.0,
+              33.0,
+              80.0,
+              50.0,
+              46.4
+            ]
+          },
+          {
+            "method": "ACT",
+            "values": [
+              45.0,
+              20.0,
+              83.0,
+              19.0,
+              65.0,
+              29.0,
+              60.0,
+              45.0,
+              45.8
+            ]
+          },
+          {
+            "method": "SeedPolicy-T",
+            "values": [
+              72.0,
+              24.0,
+              92.0,
+              47.0,
+              80.0,
+              61.0,
+              45.0,
+              32.0,
+              56.6
+            ]
+          },
+          {
+            "method": "Diffusion Policy (DP)",
+            "values": [
+              42.0,
+              24.0,
+              53.0,
+              7.0,
+              5.0,
+              61.0,
+              49.0,
+              37.0,
+              34.8
+            ]
+          },
+          {
+            "method": "CMAP (Ours)",
+            "values": [
+              65.0,
+              26.0,
+              88.0,
+              23.0,
+              92.0,
+              72.0,
+              72.0,
+              56.0,
+              61.8
+            ],
+            "highlight": true
+          }
+        ],
+        "note": "Best values among ACT, DP, and CMAP are emphasized in the manuscript; CMAP is shaded."
+      },
+      {
+        "title": "ManiSkill comparison",
+        "unit": "Success rate (%)",
+        "columns": [
+          "Method",
+          "Push Cube",
+          "Stack Cube",
+          "Pull Cube",
+          "Avg."
+        ],
+        "rows": [
+          {
+            "method": "OpenVLA",
+            "values": [
+              4.0,
+              18.0,
+              16.0,
+              12.7
+            ]
+          },
+          {
+            "method": "UniVLA",
+            "values": [
+              7.0,
+              22.0,
+              20.0,
+              16.3
+            ]
+          },
+          {
+            "method": "WorldVLA",
+            "values": [
+              10.0,
+              17.0,
+              22.0,
+              16.3
+            ]
+          },
+          {
+            "method": "ACT",
+            "values": [
+              31.0,
+              13.0,
+              34.0,
+              26.0
+            ]
+          },
+          {
+            "method": "StaMo",
+            "values": [
+              32.0,
+              16.0,
+              38.0,
+              28.7
+            ]
+          },
+          {
+            "method": "OpenVLA + StaMo state",
+            "values": [
+              32.0,
+              48.0,
+              36.0,
+              38.7
+            ]
+          },
+          {
+            "method": "DINO-WM",
+            "values": [
+              8.0,
+              4.0,
+              18.0,
+              10.0
+            ]
+          },
+          {
+            "method": "CMAP (Ours)",
+            "values": [
+              54.0,
+              18.0,
+              88.0,
+              53.3
+            ],
+            "highlight": true
+          }
+        ],
+        "note": "Boldface in the manuscript compares ACT and CMAP; dagger-marked baseline values are reported by StaMo."
+      }
+    ]
+  },
+  "real_world": {
+    "heading": "Real-World Experiments",
+    "summary": "We evaluate ACT, DP, and CMAP on the AGIBOT G1 and Leju Kuavo 4 Pro platforms. Together, these physical deployments expose the policies to contact dynamics, arm-hand coordination, sensing noise, control latency, and communication delay.",
+    "platforms": [
+      {
+        "platform": "Leju Kuavo 4 Pro",
+        "title": "Long-horizon dexterous manipulation",
+        "description": "The Kuavo setup controls one 7-DoF arm equipped with a dexterous hand from synchronized multi-view RGB observations at 10 Hz.",
+        "tasks": [
+          "Sheet Loading"
+        ],
+        "figure_key": "kuavo"
+      },
+      {
+        "platform": "AGIBOT G1",
+        "title": "Contact-rich tabletop manipulation",
+        "description": "The AGIBOT setup controls the right 7-DoF arm and scalar gripper from head- and right-wrist-camera RGB streams, with a 15-Hz policy loop and a 100-Hz low-level arm-control loop.",
+        "tasks": [
+          "Cup Separation",
+          "Bell Press",
+          "Dual-Item Placement"
+        ],
+        "figure_key": "agibot"
+      }
+    ],
+    "table": {
+      "title": "Real-world success counts and rates",
+      "unit": "Count (rate %)",
+      "columns": [
+        "Method",
+        "Cup Separation",
+        "Bell Press",
+        "Chess Grasp",
+        "Bottle Grasp",
+        "Sheet Loading",
+        "Outcome Avg."
+      ],
+      "rows": [
+        {
+          "method": "ACT",
+          "values": [
+            "4/10 (40.0)",
+            "8/10 (80.0)",
+            "5/10 (50.0)",
+            "6/10 (60.0)",
+            "2/10 (20.0)",
+            "25/50 (50.0)"
+          ]
+        },
+        {
+          "method": "DP",
+          "values": [
+            "5/10 (50.0)",
+            "7/10 (70.0)",
+            "3/10 (30.0)",
+            "8/10 (80.0)",
+            "1/10 (10.0)",
+            "24/50 (48.0)"
+          ]
+        },
+        {
+          "method": "CMAP (Ours)",
+          "values": [
+            "7/10 (70.0)",
+            "9/10 (90.0)",
+            "8/10 (80.0)",
+            "10/10 (100.0)",
+            "4/10 (40.0)",
+            "38/50 (76.0)"
+          ],
+          "highlight": true
+        }
+      ],
+      "note": "Chess Grasp and Bottle Grasp are checkpoints within 10 shared Dual-Item Placement trials; Outcome Avg. aggregates five outcomes."
+    },
+    "protocol": "We collect 50 teleoperated demonstrations per task and use the same task-specific demonstration set to train ACT, DP, and CMAP. Each method is evaluated over 10 physical trials per task with matched observations and action spaces. Success outcomes are manually verified from recorded videos and logs."
+  },
+  "ablations": {
+    "heading": "Ablations",
+    "summary": "Matched configurations distinguish the contributions of executed-action history, contiguous masked regeneration, and score-guided span selection on the fixed RoboTwin diagnostic suite and ManiSkill.",
+    "sequence": [
+      {
+        "label": "ACT",
+        "robotwin": "33.4%",
+        "maniskill": "26.0%"
+      },
+      {
+        "label": "+ History",
+        "robotwin": "39.5%",
+        "maniskill": "45.3%"
+      },
+      {
+        "label": "+ Regeneration",
+        "robotwin": "41.1%",
+        "maniskill": "43.0%"
+      },
+      {
+        "label": "CMAP",
+        "robotwin": "49.3%",
+        "maniskill": "53.3%"
+      }
+    ],
+    "views": [
+      {
+        "id": "components",
+        "title": "Component build-up",
+        "description": "Follow the matched progression from ACT to the complete CMAP policy. Select a stage to isolate its position in the aggregate comparison.",
+        "figure_key": "ablation",
+        "chart": {
+          "type": "line",
+          "title": "Aggregate success rate by component",
+          "y_label": "Success rate (%)",
+          "y_min": 20,
+          "y_max": 60,
+          "y_step": 10,
+          "categories": [
+            "ACT",
+            "+ Hist.",
+            "+ Regen",
+            "CMAP"
+          ],
+          "series": [
+            {
+              "label": "RoboTwin",
+              "color": "#2b5f82",
+              "values": [
+                33.4,
+                39.5,
+                41.1,
+                49.3
+              ]
+            },
+            {
+              "label": "ManiSkill",
+              "color": "#dc5a5a",
+              "values": [
+                26.0,
+                45.3,
+                43.0,
+                53.3
+              ]
+            }
+          ],
+          "source_note": "Replotted from the manuscript component ablation data. Select a stage or play the sequence to animate the comparison."
+        },
+        "items": [
+          {
+            "label": "ACT",
+            "eyebrow": "Baseline",
+            "description": "Standard action chunking without executed-action history or masked local regeneration.",
+            "metrics": [
+              {
+                "label": "RoboTwin",
+                "value": "33.4%"
+              },
+              {
+                "label": "ManiSkill",
+                "value": "26.0%"
+              }
+            ]
+          },
+          {
+            "label": "+ History",
+            "eyebrow": "Executed context",
+            "description": "Conditioning on recently executed actions improves both aggregate benchmarks, with the largest immediate gain on ManiSkill.",
+            "metrics": [
+              {
+                "label": "RoboTwin",
+                "value": "39.5%"
+              },
+              {
+                "label": "ManiSkill",
+                "value": "45.3%"
+              }
+            ]
+          },
+          {
+            "label": "+ Regeneration",
+            "eyebrow": "Masked revision",
+            "description": "Masked local regeneration revises a contiguous future span while preserving the surrounding coarse actions.",
+            "metrics": [
+              {
+                "label": "RoboTwin",
+                "value": "41.1%"
+              },
+              {
+                "label": "ManiSkill",
+                "value": "43.0%"
+              }
+            ]
+          },
+          {
+            "label": "CMAP",
+            "eyebrow": "Score-guided selection",
+            "description": "The complete method adds uncertainty-guided span selection and reaches the strongest aggregate result on both benchmarks.",
+            "metrics": [
+              {
+                "label": "RoboTwin",
+                "value": "49.3%"
+              },
+              {
+                "label": "ManiSkill",
+                "value": "53.3%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tasks",
+        "title": "Task-level breakdown",
+        "description": "Inspect the three RoboTwin diagnostic tasks and their eight-task macro-average. Each focus reports CMAP and its gain over the strongest alternative.",
+        "figure_key": "task_ablation",
+        "chart": {
+          "type": "bar",
+          "title": "Task-level ablation comparison",
+          "y_label": "Success rate (%)",
+          "y_min": 0,
+          "y_max": 100,
+          "y_step": 25,
+          "categories": [
+            "Beat Block Hammer",
+            "Open Microwave",
+            "Click Alarm Clock",
+            "Eight-task average"
+          ],
+          "series": [
+            {
+              "label": "ACT",
+              "color": "#7f9fc3",
+              "values": [
+                45.0,
+                65.0,
+                29.0,
+                33.4
+              ]
+            },
+            {
+              "label": "SeqHist",
+              "color": "#9bbbd7",
+              "values": [
+                49.0,
+                67.0,
+                66.0,
+                39.5
+              ]
+            },
+            {
+              "label": "Refine-Block",
+              "color": "#ebb473",
+              "values": [
+                42.0,
+                74.0,
+                61.0,
+                37.5
+              ]
+            },
+            {
+              "label": "Refine-Uncert",
+              "color": "#df927f",
+              "values": [
+                17.0,
+                26.0,
+                35.0,
+                15.1
+              ]
+            },
+            {
+              "label": "RandSpan",
+              "color": "#7cb3a8",
+              "values": [
+                57.0,
+                75.0,
+                61.0,
+                41.1
+              ]
+            },
+            {
+              "label": "CMAP",
+              "color": "#25946f",
+              "values": [
+                65.0,
+                92.0,
+                72.0,
+                49.3
+              ]
+            }
+          ],
+          "source_note": "Replotted from the manuscript task-level ablation data. Click a task group to inspect its exact CMAP result and gain."
+        },
+        "items": [
+          {
+            "label": "Beat Block Hammer",
+            "eyebrow": "Diagnostic task 01",
+            "description": "CMAP reaches 65.0% and improves by 8.0 percentage points over the strongest alternative.",
+            "metrics": [
+              {
+                "label": "CMAP",
+                "value": "65.0%"
+              },
+              {
+                "label": "Gain",
+                "value": "+8.0"
+              }
+            ]
+          },
+          {
+            "label": "Open Microwave",
+            "eyebrow": "Diagnostic task 02",
+            "description": "CMAP reaches 92.0% and improves by 17.0 percentage points over the strongest alternative.",
+            "metrics": [
+              {
+                "label": "CMAP",
+                "value": "92.0%"
+              },
+              {
+                "label": "Gain",
+                "value": "+17.0"
+              }
+            ]
+          },
+          {
+            "label": "Click Alarm Clock",
+            "eyebrow": "Diagnostic task 03",
+            "description": "CMAP reaches 72.0% and improves by 6.0 percentage points over the strongest alternative.",
+            "metrics": [
+              {
+                "label": "CMAP",
+                "value": "72.0%"
+              },
+              {
+                "label": "Gain",
+                "value": "+6.0"
+              }
+            ]
+          },
+          {
+            "label": "Eight-task average",
+            "eyebrow": "Macro-average",
+            "description": "Across the diagnostic suite, CMAP reaches 49.3% and exceeds the strongest matched alternative by 8.2 percentage points.",
+            "metrics": [
+              {
+                "label": "CMAP",
+                "value": "49.3%"
+              },
+              {
+                "label": "Gain",
+                "value": "+8.2"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "detail": "Per prediction cycle, CMAP regenerates 12 of 50 future actions on RoboTwin and 8 of 30 on ManiSkill during deployment. All reported models select one span and apply one regeneration pass."
+  },
+  "success_failure": {
+    "heading": "Success and Failure Cases",
+    "summary": "AGIBOT G1 success-failure pairs isolate recurring contact errors. Successful examples establish centered contact and maintain object alignment through the decisive interaction; remaining failures concentrate around contact geometry, grasp closure, and object alignment.",
+    "cases": [
+      {
+        "task": "Cup Separation",
+        "failure": "Missed rim contact",
+        "description": "The gripper enters the cup opening without establishing stable rim contact, preventing clean separation."
+      },
+      {
+        "task": "Bell Press",
+        "failure": "Off-center press",
+        "description": "Off-center contact redirects the applied force and fails to fully depress the button."
+      },
+      {
+        "task": "Chess Grasp",
+        "failure": "Incomplete closure",
+        "description": "The chess-piece grasp misses a stable opposing contact."
+      },
+      {
+        "task": "Bottle Grasp",
+        "failure": "Tilted grasp",
+        "description": "The bottle is acquired at a tilted pose that can cause slip or collision before placement."
+      }
+    ],
+    "extension": "The current policy has no direct tactile or force measurements. The remaining failures motivate contact-sensitive span-selection scores and a recovery controller that can reopen a new interval when the expected contact event is absent."
+  },
+  "title": "CMAP: Continuous Masked Action-Tape Modeling for Visuomotor Manipulation",
+  "abstract": "Action-chunking policies generate temporally coherent action sequences. We propose CMAP, a history-conditioned continuous masked action policy that extends this paradigm with selective local revision in continuous action space. CMAP treats each action chunk as an editable prediction: it predicts a coarse future chunk from the current observation and recent executed action commands, scores contiguous candidate intervals, and regenerates the selected interval while preserving the surrounding actions. CMAP achieves average success rates of 61.8% in the eight-task RoboTwin main comparison and 53.3% on ManiSkill. Real-world experiments further show consistent improvements over baseline methods on the AGIBOT G1 and Leju Kuavo 4 Pro humanoid platforms.",
+  "keywords": [
+    "Robot Learning",
+    "Imitation Learning",
+    "Action Chunking",
+    "Masked Generation"
+  ],
+  "sections": [
+    "Introduction",
+    "Related Work",
+    "Method",
+    "Simulation Experiments",
+    "Real-World Experiments",
+    "Conclusion"
+  ],
+  "figures": {
+    "hero": {
+      "path": "assets/figures/fig1-cmap-overview.svg",
+      "alt": "Conceptual comparison between conventional action-chunk generation and CMAP.",
+      "caption": "Conceptual comparison between conventional action-chunk generation and CMAP. Conventional policies predict a future action chunk without explicitly revising local errors, whereas CMAP conditions prediction on executed-action history and regenerates a selected future span while preserving the remaining actions.",
+      "label": "fig:concept"
+    },
+    "method": {
+      "path": "assets/figures/fig2-cmap-method.svg",
+      "alt": "Overview of the CMAP predict-select-regenerate pipeline.",
+      "caption": "Overview of CMAP. (A) The current observation and visible executed-action history of length H condition a coarse prediction of K future actions and per-step span-selection scores. (B) Contiguous future windows are ranked by their mean scores, and the highest-scoring window defines the selected span R. (C) The local refiner regenerates only R, merges it with the preserved coarse actions, and executes the resulting action tape with receding-horizon control.",
+      "label": "fig:method"
+    },
+    "simulation": {
+      "path": "assets/figures/fig5-simulation-tasks.png",
+      "alt": "Simulation tasks in RoboTwin and ManiSkill.",
+      "caption": "Simulation tasks in RoboTwin (top two rows) and ManiSkill (bottom row). ManiSkill frames are sampled from CMAP evaluation rollouts.",
+      "label": "fig:simulation_tasks"
+    },
+    "ablation": {
+      "path": "assets/figures/fig4-ablation.png",
+      "alt": "Component ablations on RoboTwin and ManiSkill.",
+      "caption": "Component ablations on the fixed RoboTwin diagnostic suite and ManiSkill. +Hist. adds executed-action history, +Regen adds masked span regeneration, and CMAP adds score-guided span selection; labels report macro-averages and CMAP gains over ACT.",
+      "label": "fig:ablation"
+    },
+    "task_ablation": {
+      "path": "assets/figures/fig4-task-ablation.png",
+      "alt": "Task-level ablations on the RoboTwin diagnostic suite.",
+      "caption": "Task-level ablations on three tasks from the fixed RoboTwin diagnostic suite and its eight-task macro-average. Labels above CMAP show gains over the strongest alternative.",
+      "label": "fig:robotwin_task_ablation"
+    },
+    "kuavo": {
+      "path": "assets/figures/fig6-kuavo-stages.png",
+      "alt": "Four stages of a CMAP rollout for Kuavo 4 Pro Sheet Loading.",
+      "caption": "Four stages of a CMAP rollout for Kuavo 4 Pro Sheet Loading: initialization, alignment, grasp and lift, and placement and release.",
+      "label": "fig:kuavo_stages"
+    },
+    "agibot": {
+      "path": "assets/figures/fig6-agibot-tasks.png",
+      "alt": "Representative AGIBOT G1 task rollouts.",
+      "caption": "Representative AGIBOT G1 task rollouts. Columns denote tasks, and rows show successive execution stages.",
+      "label": "fig:agibot_tasks"
+    },
+    "success_failure": {
+      "path": "assets/figures/fig7-success-failure.png",
+      "alt": "AGIBOT G1 success-failure pairs with contact errors marked.",
+      "caption": "Real-world execution examples on AGIBOT G1 and Kuavo 4 Pro. Top: success. Bottom: failures for Cup Separation, Bell Press, Chess Grasp, and Bottle Grasp, plus a recovered near-failure for Sheet Loading. Red callouts mark critical contact regions.",
+      "label": "fig:realworld_failures"
+    }
+  },
+  "source": {
+    "root_tex": "main_ral.tex",
+    "compiled_pdf": "main_ral.pdf",
+    "bibliography": "ref.bib",
+    "tex_digest_sha256": "3e34ae0f6ad85d04efac6eaf97698aeba61f61dc2ce13654059366d1b963e4b2",
+    "generated_date": "2026-08-25"
+  }
+}

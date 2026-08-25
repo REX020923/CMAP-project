@@ -1,0 +1,21 @@
+{
+  "assets": [
+    {"kind": "figure", "key": "hero", "label": "fig:concept", "source": "figures/source/fig1_cmap_overview.svg", "destination": "assets/figures/fig1-cmap-overview.svg", "alt": "Conceptual comparison between conventional action-chunk generation and CMAP."},
+    {"kind": "figure", "key": "method", "label": "fig:method", "source": "figures/source/fig2_cmap_method.svg", "destination": "assets/figures/fig2-cmap-method.svg", "alt": "Overview of the CMAP predict-select-regenerate pipeline."},
+    {"kind": "figure", "key": "simulation", "label": "fig:simulation_tasks", "source": "figures/paper/fig5_simulation_tasks_single_column.png", "destination": "assets/figures/fig5-simulation-tasks.png", "alt": "Simulation tasks in RoboTwin and ManiSkill."},
+    {"kind": "figure", "key": "ablation", "label": "fig:ablation", "source": "figures/paper/fig4_ablation.png", "destination": "assets/figures/fig4-ablation.png", "alt": "Component ablations on RoboTwin and ManiSkill."},
+    {"kind": "figure", "key": "task_ablation", "label": "fig:robotwin_task_ablation", "source": "figures/paper/fig_robotwin_task_ablation.png", "destination": "assets/figures/fig4-task-ablation.png", "alt": "Task-level ablations on the RoboTwin diagnostic suite."},
+    {"kind": "figure", "key": "kuavo", "label": "fig:kuavo_stages", "source": "figures/paper/fig6_kuavo_stages_grid.png", "destination": "assets/figures/fig6-kuavo-stages.png", "alt": "Four stages of a CMAP rollout for Kuavo 4 Pro Sheet Loading."},
+    {"kind": "figure", "key": "agibot", "label": "fig:agibot_tasks", "source": "figures/paper/fig6_agibot_tasks_grid.png", "destination": "assets/figures/fig6-agibot-tasks.png", "alt": "Representative AGIBOT G1 task rollouts."},
+    {"kind": "figure", "key": "success_failure", "label": "fig:realworld_failures", "source": "figures/paper/fig7_realworld_success_failure_grid.png", "destination": "assets/figures/fig7-success-failure.png", "alt": "AGIBOT G1 success-failure pairs with contact errors marked."},
+    {"kind": "paper", "source": "main_ral.pdf", "destination": "assets/paper/cmap-paper.pdf"},
+    {"kind": "video", "source": "figures/source/maniskill_rollouts/PushCube.mp4", "destination": "assets/videos/maniskill-push-cube.mp4"},
+    {"kind": "video", "source": "figures/source/maniskill_rollouts/StackCube.mp4", "destination": "assets/videos/maniskill-stack-cube.mp4"},
+    {"kind": "video", "source": "figures/source/maniskill_rollouts/PullCube.mp4", "destination": "assets/videos/maniskill-pull-cube.mp4"},
+    {"kind": "video", "source": "output/remote_rollouts/handover_episode0.mp4", "destination": "assets/videos/robotwin-handover-episode-1.mp4"},
+    {"kind": "video", "source": "output/remote_rollouts/handover_episode1.mp4", "destination": "assets/videos/robotwin-handover-episode-2.mp4"},
+    {"kind": "video", "source": "output/remote_rollouts/place_episode0.mp4", "destination": "assets/videos/robotwin-place-episode-1.mp4"},
+    {"kind": "video", "source": "output/remote_rollouts/place_episode1.mp4", "destination": "assets/videos/robotwin-place-episode-2.mp4"},
+    {"kind": "video", "source": "output/remote_rollouts/place_episode2.mp4", "destination": "assets/videos/robotwin-place-episode-3.mp4"}
+  ]
+}

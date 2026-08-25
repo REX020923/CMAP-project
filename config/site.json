@@ -1,0 +1,15 @@
+{
+  "review_mode": true,
+  "links": {
+    "paper": "assets/paper/cmap-paper.pdf",
+    "code": null,
+    "video": null,
+    "arxiv": null
+  },
+  "public_identity": {
+    "authors": [],
+    "affiliations": [],
+    "acknowledgment": null,
+    "bibtex": null
+  }
+}
