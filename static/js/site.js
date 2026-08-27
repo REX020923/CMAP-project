@@ -15,6 +15,14 @@ const escapeHtml = (value = "") =>
 
 const formatValue = (value) => (typeof value === "number" ? value.toFixed(1) : value);
 
+function paperTitleMarkup(title) {
+  const text = String(title);
+  const preferredBreak = text.indexOf(" Modeling for ");
+  if (preferredBreak === -1) return escapeHtml(text);
+
+  return `<span>${escapeHtml(text.slice(0, preferredBreak))}</span><span>${escapeHtml(text.slice(preferredBreak + 1))}</span>`;
+}
+
 function actionButton(label, url, primary = false) {
   if (!url) return "";
   return `<a class="button${primary ? " primary" : ""}" href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(label)} <span aria-hidden="true">↗</span></a>`;
@@ -41,7 +49,7 @@ function sectionIntro(index, eyebrow, title, body) {
 function renderHero(paper, site, media) {
   const reviewMode = site.review_mode !== false;
   document.title = `${paper.title} · Project Page`;
-  document.querySelector("#paper-title").textContent = paper.title;
+  document.querySelector("#paper-title").innerHTML = paperTitleMarkup(paper.title);
 
   const publicAuthors = site.public_identity?.authors || [];
   document.querySelector("#author-line").innerHTML = reviewMode
