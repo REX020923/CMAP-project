@@ -113,13 +113,13 @@ figure { margin: 0; }
 h1, h2, h3 { margin-top: 0; text-wrap: balance; }
 h1 {
   font-family: var(--serif);
-  font-size: clamp(3rem, 6vw, 5.15rem);
+  font-size: clamp(2.45rem, 4.6vw, 4.35rem);
   font-weight: 600;
   letter-spacing: -0.045em;
   line-height: 1.02;
   margin: 1.2rem 0 1.65rem;
 }
-#paper-title span { display: block; }
+#paper-title span { display: block; white-space: nowrap; }
 #paper-title span + span { margin-top: 0.08em; }
 h2 {
   font-family: var(--serif);
@@ -484,7 +484,7 @@ tbody th { font-weight: 600; }
   .site-nav { gap: 1rem; max-width: 100%; overflow-x: auto; padding-bottom: 0.3rem; width: 100%; }
   .site-nav a { flex: 0 0 auto; font-size: 0.72rem; }
   .section { padding-block: 4.5rem; }
-  #paper-title span { display: inline; }
+  #paper-title span { display: inline; white-space: normal; }
   #paper-title span + span::before { content: " "; }
   .hero { padding-top: 3.6rem; }
   .section-grid { gap: 1.5rem; grid-template-columns: 1fr; }
