@@ -364,7 +364,7 @@ tbody th { font-weight: 600; }
 .protocol-note span { color: #8ed0cb; }
 .protocol-note p { color: #d8e2e2; font-family: var(--serif); font-size: 1.18rem; margin: 0; }
 
-.ablation-view-tabs { display: grid; gap: 0.7rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 3rem; }
+.ablation-view-tabs { display: grid; gap: 0.7rem; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 3rem; }
 .ablation-view-button {
   align-items: center;
   background: var(--surface);
@@ -467,7 +467,7 @@ tbody th { font-weight: 600; }
 .ablation-chart-legend i { background: var(--legend-color); border-radius: 999px; display: inline-block; height: 0.55rem; width: 0.8rem; }
 .ablation-chart-note { border-top: 1px solid var(--line); color: var(--muted); font-size: 0.68rem; line-height: 1.55; margin: 0.65rem 0 0; padding: 0.75rem 0.25rem 0; }
 .evidence-note { border-left: 3px solid var(--accent); color: #34444a; font-family: var(--serif); font-size: 1.2rem; margin: 2rem 0 0; padding-left: 1.2rem; }
-.case-grid { display: grid; gap: 1rem; grid-template-columns: repeat(4, 1fr); margin-top: 1rem; }
+.case-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 1rem; }
 .case-grid article { background: var(--surface); border: 1px solid var(--line); border-radius: 0.85rem; padding: 1.2rem; }
 .case-grid h3 { font-family: var(--serif); font-size: 1.35rem; margin: 1.25rem 0 0.6rem; }
 .case-grid p { color: var(--muted); font-size: 0.8rem; margin: 0; }
