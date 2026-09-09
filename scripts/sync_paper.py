@@ -217,15 +217,18 @@ def copy_selected_assets(
     figures: dict[str, Any] = {}
     copied: list[str] = []
     for item in manifest.get("assets", []):
-        source = (paper_root / Path(item["source"])).resolve()
-        if paper_root not in source.parents:
-            raise SyncError("Asset source escapes the paper repository.")
-        if not source.is_file():
-            raise SyncError(f"Required source asset is missing: {item['source']}")
         destination = safe_destination(item["destination"])
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, destination)
-        copied.append(item["destination"])
+        if item.get("copy", True):
+            source = (paper_root / Path(item["source"])).resolve()
+            if paper_root not in source.parents:
+                raise SyncError("Asset source escapes the paper repository.")
+            if not source.is_file():
+                raise SyncError(f"Required source asset is missing: {item['source']}")
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
+            copied.append(item["destination"])
+        elif not destination.is_file():
+            raise SyncError(f"Website-managed asset is missing: {item['destination']}")
 
         if item["kind"] == "figure":
             label = item.get("label")

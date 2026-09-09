@@ -25,35 +25,35 @@
     "stages": [
       {
         "title": "Predict",
-        "panel": "(a) History-Conditioned Coarse Prediction",
+        "panel": "(a) History-Conditioned Action Tape",
         "description": "The current observation and visible executed-action history condition a coarse prediction of future actions and per-step span-selection scores.",
         "focus": {
           "left": 0,
           "top": 0,
           "width": 100,
-          "height": 57
+          "height": 58
         }
       },
       {
         "title": "Select",
-        "panel": "(b) Score-Guided Span Selection",
+        "panel": "(b) Uncertainty-Guided Span Selection",
         "description": "Contiguous future windows are ranked by their mean scores. The first maximizing window defines the selected span, and positions regenerated in earlier passes are excluded from later selections.",
         "focus": {
-          "left": 48,
-          "top": 54,
-          "width": 52,
-          "height": 46
+          "left": 54,
+          "top": 56,
+          "width": 46,
+          "height": 44
         }
       },
       {
         "title": "Regenerate",
-        "panel": "(c) Local Refinement & Execution",
+        "panel": "(c) Regeneration & Execution",
         "description": "The local refiner regenerates only the selected span and merges it with preserved coarse actions. After the configured passes, the completed tape is executed with receding-horizon control.",
         "focus": {
           "left": 0,
-          "top": 54,
-          "width": 51,
-          "height": 46
+          "top": 56,
+          "width": 55,
+          "height": 44
         }
       }
     ]

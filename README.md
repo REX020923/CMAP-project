@@ -29,7 +29,7 @@ python scripts/sync_paper.py
 
 A third option is to copy `config/local.example.json` to `config/local.json` and set `paperSourceRoot`. `config/local.json` is ignored by Git and must remain local.
 
-The script locates the CMAP root TeX file, follows local `\input`/`\include` relationships, extracts the title, Abstract, keywords, section names, and figure captions, then copies only the files listed in `config/sync.manifest.json`. It never writes to the manuscript repository.
+The script locates the CMAP root TeX file, follows local `\input`/`\include` relationships, extracts the title, Abstract, keywords, section names, and figure captions, then copies only the files listed in `config/sync.manifest.json`. It never writes to the manuscript repository. Manifest entries with `"copy": false` keep a website-managed asset in place while still synchronizing its caption from the paper.
 
 ## Update after a manuscript revision
 
@@ -48,7 +48,7 @@ The script locates the CMAP root TeX file, follows local `\input`/`\include` rel
 
 - `data/paper.generated.json` is the browser-facing content bundle.
 - `data/paper.curated.json` contains experiment structures that are intentionally not parsed from complex LaTeX tables.
-- `config/sync.manifest.json` maps selected external assets to public website paths.
+- `config/sync.manifest.json` maps paper-managed and website-managed assets to public website paths.
 - `data/media.json` is the single media manifest.
 - `config/site.json` controls anonymous/public identity and outbound links.
 - `static/js/site.js` renders reusable sections and contains no scientific result table definitions.
@@ -79,13 +79,13 @@ For a main paper video, copy the file to `assets/videos/`, then replace `introdu
 
 The page hides unconfigured media cleanly. Each entry may also define `type` and `note` fields, which are rendered as provenance-aware card metadata. Simulation media can be filtered by benchmark. Videos are muted, loop automatically, and play while their cards are visible in the viewport. No JavaScript edit is needed when a video is added through the manifest.
 
-The current simulation gallery contains twelve videos: the eight RoboTwin paper tasks, one additional Handover Mic rollout, and three ManiSkill tasks. The real-robot gallery contains AGIBOT G1 CMAP executions plus a clearly labeled Leju Kuavo 4 Pro expert demonstration. Supplemental videos copied directly into `assets/videos/` are not overwritten by manuscript synchronization; only files listed in `config/sync.manifest.json` are refreshed from the read-only manuscript repository.
+The current simulation gallery contains twelve videos: the eight RoboTwin paper tasks, one additional Handover Mic rollout, and three ManiSkill tasks. The real-robot gallery contains AGIBOT G1 CMAP executions plus a clearly labeled Leju Kuavo 4 Pro expert demonstration. Supplemental videos copied directly into `assets/videos/` are not overwritten by manuscript synchronization; only copy-enabled files listed in `config/sync.manifest.json` are refreshed from the read-only manuscript repository.
 
 The three AGIBOT G1 display clips use a consistent `640 × 380` crop that removes the top 100 pixels above the white divider. The Leju demonstration keeps its original framing.
 
 ## Interactive method figure
 
-The CMAP method explorer is driven by `method.stages` in `data/paper.curated.json`. Each stage defines a `panel` label and a percentage-based `focus` rectangle (`left`, `top`, `width`, `height`). Editing those values updates the highlighted region without changing the manuscript figure itself. The stage controls support mouse, touch, and arrow-key navigation.
+The CMAP method explorer is driven by `method.stages` in `data/paper.curated.json`. Each stage defines a `panel` label and a percentage-based `focus` rectangle (`left`, `top`, `width`, `height`). Editing those values updates the highlighted region without changing the manuscript figure itself. The stage controls support mouse, touch, and arrow-key navigation. The deployed method SVG is website-managed (`"copy": false`) and carries its editable Excalidraw payload inside the SVG.
 
 The Ablations section is driven by `ablations.views`. Each view supplies chart-ready series, selectable metrics, and explanations. The component line chart reveals one new segment from 01 through 04, while the grouped bar chart reveals one new task group at each step; future values remain hidden until their step. Both views start their looping sequence automatically when selected. Selecting a numbered control or clicking a chart category pauses playback and updates the highlight and exact metrics, while the play/pause control can resume the sequence. Values remain centralized in `data/paper.curated.json`, and reduced-motion preferences are respected.
 
