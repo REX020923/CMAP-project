@@ -1,266 +1,215 @@
 {
   "schema_version": 1,
   "facts": {
-    "robotwin_main_macro": {"display": "63.9%", "label": "Eight-task RoboTwin macro-average"},
+    "robotwin_main_macro": {"display": "71.7%", "label": "Six-task RoboTwin macro-average"},
     "maniskill_macro": {"display": "53.3%", "label": "ManiSkill macro-average"},
-    "physical_total": {"display": "38/50", "label": "Successes across five physical outcomes"}
+    "physical_total": {"display": "76.0%", "label": "Mean across five real-world measures"}
   },
   "headline_fact_ids": ["robotwin_main_macro", "maniskill_macro", "physical_total"],
   "method": {
     "heading": "CMAP Method",
-    "summary": "CMAP constructs an action tape from executed-action history and future action positions. It predicts a coarse future chunk and per-step span-selection scores, selects the contiguous window with the highest mean score, and regenerates only that interval while preserving coarse predictions outside it. Selection and regeneration can repeat for multiple passes before receding-horizon execution.",
+    "summary": "CMAP arranges executed commands and masked future positions on a shared action tape. HCAT predicts a coarse future chunk and error-supervised uncertainty scores; UGSR selects the contiguous window with the highest mean uncertainty and regenerates only that interval. All surrounding actions are copied unchanged, and only issued commands enter the next execution history.",
     "stages": [
       {
         "title": "Predict",
         "panel": "(a) History-Conditioned Action Tape",
-        "description": "The current observation and visible executed-action history condition a coarse prediction of future actions and per-step span-selection scores.",
+        "description": "Visual and proprioceptive context combines with the executed-action prefix. The shared coarse features produce continuous future actions and a per-step uncertainty score for every future position.",
         "focus": {"left": 0, "top": 0, "width": 100, "height": 58}
       },
       {
         "title": "Select",
         "panel": "(b) Uncertainty-Guided Span Selection",
-        "description": "Contiguous future windows are ranked by their mean scores. The first maximizing window defines the selected span, and positions regenerated in earlier passes are excluded from later selections.",
+        "description": "UGSR averages uncertainty over every eligible contiguous window and selects the maximum-mean interval R. Actions outside R remain visible as context for refinement.",
         "focus": {"left": 54, "top": 56, "width": 46, "height": 44}
       },
       {
         "title": "Regenerate",
         "panel": "(c) Regeneration & Execution",
-        "description": "The local refiner regenerates only the selected span and merges it with preserved coarse actions. After the configured passes, the completed tape is executed with receding-horizon control.",
+        "description": "The local refiner reconstructs only the masked interval, inserts the refined actions into the preserved tape, and sends the merged chunk to temporal aggregation and closed-loop execution.",
         "focus": {"left": 0, "top": 56, "width": 55, "height": 44}
       }
     ]
   },
   "simulation": {
     "heading": "Simulation Experiments",
-    "summary": "We evaluate CMAP on eight RoboTwin tasks and three single-arm ManiSkill tasks, using 50 and 100 expert demonstrations per task, respectively. ACT, DP, and CMAP are each evaluated over 100 episodes per RoboTwin task.",
+    "summary": "CMAP is evaluated on six RoboTwin tasks and three single-arm ManiSkill tasks. On RoboTwin, ACT, Diffusion Policy, DDP, and CMAP are evaluated over 100 episodes per task; the comparison also includes published RDT-1B and TwinVLA results.",
     "tables": [
       {
         "title": "RoboTwin main comparison",
         "unit": "Success rate (%)",
-        "columns": ["Method", "Beat Block Hammer", "Pick Dual Bottles", "Handover Mic", "Stack Two Blocks", "Open Microwave", "Click Alarm Clock", "Open Laptop", "Place Empty Cup", "Avg."],
+        "columns": ["Method", "Handover Mic", "Stack Two Blocks", "Open Microwave", "Click Alarm Clock", "Open Laptop", "Place Empty Cup", "Avg."],
         "rows": [
-          {"method": "RDT-1B", "values": [77.0, 42.0, 90.0, 21.0, 37.0, 61.0, 59.0, 56.0, 55.4]},
-          {"method": "TwinVLA", "values": [77.0, 18.0, 84.0, 26.0, 3.0, 33.0, 80.0, 50.0, 46.4]},
-          {"method": "ACT", "values": [45.0, 20.0, 83.0, 19.0, 65.0, 29.0, 60.0, 45.0, 45.8]},
-          {"method": "SeedPolicy-T", "values": [72.0, 24.0, 92.0, 47.0, 80.0, 61.0, 45.0, 32.0, 56.6]},
-          {"method": "Diffusion Policy (DP)", "values": [42.0, 24.0, 53.0, 7.0, 5.0, 61.0, 49.0, 37.0, 34.8]},
-          {"method": "CMAP (Ours)", "values": [65.0, 26.0, 97.0, 23.0, 92.0, 74.0, 78.0, 56.0, 63.9], "highlight": true}
+          {"method": "ACT", "values": [83.0, 19.0, 65.0, 29.0, 60.0, 45.0, 50.2]},
+          {"method": "Diffusion Policy (DP)", "values": [53.0, 7.0, 5.0, 61.0, 49.0, 37.0, 35.3]},
+          {"method": "DDP", "values": [93.0, 10.0, 30.0, 18.0, 57.0, 14.0, 37.0]},
+          {"method": "RDT-1B", "values": [90.0, 21.0, 37.0, 61.0, 59.0, 56.0, 54.0]},
+          {"method": "TwinVLA", "values": [84.0, 26.0, 3.0, 33.0, 80.0, 50.0, 46.0]},
+          {"method": "CMAP (Ours)", "values": [97.0, 26.0, 92.0, 74.0, 85.0, 56.0, 71.7], "highlight": true}
         ],
-        "note": "Best values among ACT, DP, and CMAP are emphasized in the manuscript; CMAP is shaded."
+        "note": "CMAP is best or tied-best on all six tasks. RDT-1B and TwinVLA values are taken from their original papers."
       },
       {
         "title": "ManiSkill comparison",
         "unit": "Success rate (%)",
         "columns": ["Method", "Push Cube", "Stack Cube", "Pull Cube", "Avg."],
         "rows": [
-          {"method": "OpenVLA", "values": [4.0, 18.0, 16.0, 12.7]},
-          {"method": "UniVLA", "values": [7.0, 22.0, 20.0, 16.3]},
-          {"method": "WorldVLA", "values": [10.0, 17.0, 22.0, 16.3]},
           {"method": "ACT", "values": [31.0, 13.0, 34.0, 26.0]},
+          {"method": "OpenVLA", "values": [4.0, 18.0, 16.0, 12.7]},
           {"method": "StaMo", "values": [32.0, 16.0, 38.0, 28.7]},
-          {"method": "OpenVLA + StaMo state", "values": [32.0, 48.0, 36.0, 38.7]},
-          {"method": "DINO-WM", "values": [8.0, 4.0, 18.0, 10.0]},
           {"method": "CMAP (Ours)", "values": [54.0, 18.0, 88.0, 53.3], "highlight": true}
         ],
-        "note": "Boldface in the manuscript compares ACT and CMAP; dagger-marked baseline values are reported by StaMo."
+        "note": "OpenVLA and StaMo are published reference results reported by StaMo; CMAP is best or tied-best on every task."
       }
     ]
   },
   "real_world": {
     "heading": "Real-World Experiments",
-    "summary": "We evaluate ACT, DP, and CMAP on the AGIBOT G1 and Leju Kuavo 4 Pro platforms. Together, these physical deployments expose the policies to contact dynamics, arm-hand coordination, sensing noise, control latency, and communication delay.",
+    "summary": "CMAP is compared with ACT, Diffusion Policy, and DDP on four physical tasks across AGIBOT G1 and Leju Kuavo 4 Pro. These deployments test contact-sensitive manipulation, arm-hand coordination, sensing and control delay, and sustained grasp stability.",
     "platforms": [
       {
         "platform": "Leju Kuavo 4 Pro",
         "title": "Long-horizon dexterous manipulation",
-        "description": "The Kuavo setup controls one 7-DoF arm equipped with a dexterous hand from synchronized multi-view RGB observations at 10 Hz.",
+        "description": "Kuavo performs Sheet Loading with a 7-DoF arm and dexterous hand from synchronized multi-view RGB observations.",
         "tasks": ["Sheet Loading"],
         "figure_key": "kuavo"
       },
       {
         "platform": "AGIBOT G1",
         "title": "Contact-rich tabletop manipulation",
-        "description": "The AGIBOT setup controls the right 7-DoF arm and scalar gripper from head- and right-wrist-camera RGB streams, with a 15-Hz policy loop and a 100-Hz low-level arm-control loop.",
+        "description": "AGIBOT performs three tasks using its right 7-DoF arm and scalar gripper from head- and wrist-camera RGB observations.",
         "tasks": ["Cup Separation", "Bell Press", "Dual-Item Placement"],
         "figure_key": "agibot"
       }
     ],
     "table": {
       "title": "Real-world success counts and rates",
-      "unit": "Count (rate %)",
-      "columns": ["Method", "Cup Separation", "Bell Press", "Chess Grasp", "Bottle Grasp", "Sheet Loading", "Outcome Avg."],
+      "unit": "10 trials per task",
+      "columns": ["Method", "Cup Separation", "Bell Press", "Chess Grasp", "Bottle Grasp", "Sheet Loading", "Mean (%)"],
       "rows": [
-        {"method": "ACT", "values": ["4/10 (40.0)", "8/10 (80.0)", "5/10 (50.0)", "6/10 (60.0)", "2/10 (20.0)", "25/50 (50.0)"]},
-        {"method": "DP", "values": ["5/10 (50.0)", "7/10 (70.0)", "3/10 (30.0)", "8/10 (80.0)", "1/10 (10.0)", "24/50 (48.0)"]},
-        {"method": "CMAP (Ours)", "values": ["7/10 (70.0)", "9/10 (90.0)", "8/10 (80.0)", "10/10 (100.0)", "4/10 (40.0)", "38/50 (76.0)"], "highlight": true}
+        {"method": "ACT", "values": ["4/10", "8/10", "5/10", "6/10", "2/10", "50.0"]},
+        {"method": "DP", "values": ["5/10", "7/10", "3/10", "8/10", "1/10", "48.0"]},
+        {"method": "DDP", "values": ["4/10", "6/10", "5/10", "5/10", "2/10", "44.0"]},
+        {"method": "CMAP (Ours)", "values": ["7/10", "9/10", "8/10", "10/10", "4/10", "76.0"], "highlight": true}
       ],
-      "note": "Chess Grasp and Bottle Grasp are checkpoints within 10 shared Dual-Item Placement trials; Outcome Avg. aggregates five outcomes."
+      "note": "Chess Grasp and Bottle Grasp are measured separately within the same ten Dual-Item Placement trials; the mean weights all five reported success measures equally."
     },
-    "protocol": "Each task uses 50 teleoperated demonstrations shared across ACT, DP, and CMAP. Synchronized RGB, proprioception, commands, and timestamps are recorded, and each method is evaluated over 10 matched physical trials per task. Outcomes are verified from video and logs, with joint and workspace limits, joint-delta clipping, emergency stops, and home-reset procedures enforced throughout evaluation."
+    "protocol": "All policies use matched task-specific teleoperation data: 50 demonstrations for each AGIBOT task and 150 for Sheet Loading. Each policy is evaluated in ten trials per task, totaling 40 physical rollouts."
   },
   "ablations": {
     "heading": "Ablations",
-    "summary": "Matched configurations distinguish the contributions of executed-action history, contiguous masked regeneration, and score-guided span selection on the fixed RoboTwin diagnostic suite and ManiSkill.",
+    "summary": "The updated ablations isolate executed-action history, contiguous span regeneration, uncertainty-guided selection, configuration sensitivity, and the error reduction achieved inside the regenerated interval.",
     "sequence": [
-      {"label": "ACT", "robotwin": "45.8%", "maniskill": "26.0%"},
-      {"label": "SeqHist", "robotwin": "46.7%", "maniskill": "45.3%"},
-      {"label": "RandSpan", "robotwin": "48.7%", "maniskill": "43.0%"},
-      {"label": "CMAP", "robotwin": "63.9%", "maniskill": "53.3%"}
+      {"label": "ACT", "robotwin": "51.3%", "maniskill": "26.0%"},
+      {"label": "+History", "robotwin": "65.0%", "maniskill": "45.3%"},
+      {"label": "+Regen", "robotwin": "66.7%", "maniskill": "43.0%"},
+      {"label": "CMAP", "robotwin": "83.7%", "maniskill": "53.3%"}
     ],
     "views": [
       {
         "id": "components",
         "title": "Component build-up",
-        "description": "Advance from 01 to 04 to reveal the component trajectory one segment at a time, from ACT to the complete CMAP policy.",
-        "figure_key": "ablation",
+        "description": "Advance from 01 to 04 to reveal how history, random-span regeneration, and uncertainty-guided selection change aggregate success.",
         "chart": {
           "type": "line",
-          "title": "Aggregate success rate by component",
+          "title": "Cross-benchmark component build-up",
           "y_label": "Success rate (%)",
           "y_min": 20,
-          "y_max": 70,
+          "y_max": 90,
           "y_step": 10,
-          "categories": ["ACT", "SeqHist", "RandSpan", "CMAP"],
+          "categories": ["ACT", "+History", "+Regen", "CMAP"],
           "series": [
-            {"label": "RoboTwin", "color": "#2b5f82", "values": [45.8, 46.7, 48.7, 63.9]},
+            {"label": "RoboTwin (3 tasks)", "color": "#2b5f82", "values": [51.3, 65.0, 66.7, 83.7]},
             {"label": "ManiSkill", "color": "#dc5a5a", "values": [26.0, 45.3, 43.0, 53.3]}
           ],
-          "source_note": "Replotted from the manuscript component ablation data. Each numbered stage reveals only the next segment of the comparison."
+          "source_note": "Replotted from the revised component-ablation table; each numbered stage reveals the next configuration."
         },
         "items": [
-          {
-            "label": "ACT",
-            "eyebrow": "Baseline",
-            "description": "Standard action chunking without executed-action history or masked local regeneration.",
-            "metrics": [{"label": "RoboTwin", "value": "45.8%"}, {"label": "ManiSkill", "value": "26.0%"}]
-          },
-          {
-            "label": "SeqHist",
-            "eyebrow": "Executed context",
-            "description": "Conditioning on recently executed actions improves both aggregate benchmarks, with the largest immediate gain on ManiSkill.",
-            "metrics": [{"label": "RoboTwin", "value": "46.7%"}, {"label": "ManiSkill", "value": "45.3%"}]
-          },
-          {
-            "label": "RandSpan",
-            "eyebrow": "Random masked revision",
-            "description": "Contiguous masked regeneration revises a randomly placed future span while preserving the surrounding coarse actions.",
-            "metrics": [{"label": "RoboTwin", "value": "48.7%"}, {"label": "ManiSkill", "value": "43.0%"}]
-          },
-          {
-            "label": "CMAP",
-            "eyebrow": "Score-guided selection",
-            "description": "The complete method replaces random placement with score-guided span selection and reaches the strongest aggregate result on both benchmarks.",
-            "metrics": [{"label": "RoboTwin", "value": "63.9%"}, {"label": "ManiSkill", "value": "53.3%"}]
-          }
+          {"label": "ACT", "eyebrow": "Baseline", "description": "Standard action chunking without executed-action history or masked local regeneration.", "metrics": [{"label": "RoboTwin", "value": "51.3%"}, {"label": "ManiSkill", "value": "26.0%"}]},
+          {"label": "+History", "eyebrow": "HCAT context", "description": "Adding executed-action history gives the next prediction a temporal reference for the motion already issued to the robot.", "metrics": [{"label": "RoboTwin", "value": "65.0%"}, {"label": "ManiSkill", "value": "45.3%"}]},
+          {"label": "+Regen", "eyebrow": "Random span", "description": "Contiguous masked regeneration with random span placement produces a small RoboTwin gain but does not consistently improve ManiSkill.", "metrics": [{"label": "RoboTwin", "value": "66.7%"}, {"label": "ManiSkill", "value": "43.0%"}]},
+          {"label": "CMAP", "eyebrow": "UGSR selection", "description": "Uncertainty-guided span selection completes CMAP and produces the strongest aggregate result on both benchmarks.", "metrics": [{"label": "RoboTwin", "value": "83.7%"}, {"label": "ManiSkill", "value": "53.3%"}]}
         ]
       },
       {
         "id": "tasks",
-        "title": "Task-level breakdown",
-        "description": "Advance from 01 to 04 to reveal one RoboTwin task group at a time, ending with the eight-task macro-average.",
-        "figure_key": "task_ablation",
+        "title": "Revision-rule comparison",
+        "description": "Advance from 01 to 04 to reveal the three retained RoboTwin ablation tasks and their macro-average.",
         "chart": {
           "type": "bar",
-          "title": "Task-level ablation comparison",
+          "title": "RoboTwin revision-rule ablation",
           "y_label": "Success rate (%)",
           "y_min": 0,
           "y_max": 100,
-          "y_step": 25,
-          "categories": ["Beat Block Hammer", "Open Microwave", "Click Alarm Clock", "Eight-task average"],
+          "y_step": 20,
+          "categories": ["Open Microwave", "Click Alarm Clock", "Open Laptop", "Three-task average"],
           "series": [
-            {"label": "ACT", "color": "#7f9fc3", "values": [45.0, 65.0, 29.0, 45.8]},
-            {"label": "SeqHist", "color": "#9bbbd7", "values": [49.0, 67.0, 66.0, 46.7]},
-            {"label": "Refine-Block", "color": "#ebb473", "values": [42.0, 74.0, 61.0, 46.2]},
-            {"label": "Refine-Uncert", "color": "#df927f", "values": [17.0, 26.0, 35.0, 19.2]},
-            {"label": "RandSpan", "color": "#7cb3a8", "values": [57.0, 75.0, 61.0, 48.7]},
-            {"label": "CMAP", "color": "#25946f", "values": [65.0, 92.0, 74.0, 63.9]}
+            {"label": "Refine-Block", "color": "#ebb473", "values": [74.0, 61.0, 69.0, 68.0]},
+            {"label": "Refine-Uncert", "color": "#df927f", "values": [26.0, 35.0, 11.0, 24.0]},
+            {"label": "RandSpan", "color": "#7cb3a8", "values": [75.0, 61.0, 64.0, 66.7]},
+            {"label": "CMAP", "color": "#25946f", "values": [92.0, 74.0, 85.0, 83.7]}
           ],
-          "source_note": "Replotted from the manuscript task-level ablation data. Each numbered stage reveals only the next grouped-bar comparison."
+          "source_note": "Replotted from the revised action-revision ablation; each numbered stage reveals one task group."
         },
         "items": [
-          {
-            "label": "Beat Block Hammer",
-            "eyebrow": "Diagnostic task 01",
-            "description": "CMAP reaches 65.0% and improves by 8.0 percentage points over the strongest alternative.",
-            "metrics": [{"label": "CMAP", "value": "65.0%"}, {"label": "Gain", "value": "+8.0"}]
-          },
-          {
-            "label": "Open Microwave",
-            "eyebrow": "Diagnostic task 02",
-            "description": "CMAP reaches 92.0% and improves by 17.0 percentage points over the strongest alternative.",
-            "metrics": [{"label": "CMAP", "value": "92.0%"}, {"label": "Gain", "value": "+17.0"}]
-          },
-          {
-            "label": "Click Alarm Clock",
-            "eyebrow": "Diagnostic task 03",
-            "description": "CMAP reaches 74.0% and improves by 8.0 percentage points over the strongest alternative.",
-            "metrics": [{"label": "CMAP", "value": "74.0%"}, {"label": "Gain", "value": "+8.0"}]
-          },
-          {
-            "label": "Eight-task average",
-            "eyebrow": "Macro-average",
-            "description": "Across the eight-task suite, CMAP reaches 63.9% and exceeds the strongest matched alternative by 15.2 percentage points.",
-            "metrics": [{"label": "CMAP", "value": "63.9%"}, {"label": "Gain", "value": "+15.2"}]
-          }
+          {"label": "Open Microwave", "eyebrow": "Diagnostic task 01", "description": "CMAP reaches 92.0% and gains 17.0 percentage points over the strongest alternative.", "metrics": [{"label": "CMAP", "value": "92.0%"}, {"label": "Gain", "value": "+17.0"}]},
+          {"label": "Click Alarm Clock", "eyebrow": "Diagnostic task 02", "description": "CMAP reaches 74.0% and gains 13.0 percentage points over the strongest alternative.", "metrics": [{"label": "CMAP", "value": "74.0%"}, {"label": "Gain", "value": "+13.0"}]},
+          {"label": "Open Laptop", "eyebrow": "Diagnostic task 03", "description": "CMAP reaches 85.0% and gains 16.0 percentage points over the strongest alternative.", "metrics": [{"label": "CMAP", "value": "85.0%"}, {"label": "Gain", "value": "+16.0"}]},
+          {"label": "Three-task average", "eyebrow": "Macro-average", "description": "Across the three retained tasks, CMAP reaches 83.7% and exceeds the strongest alternative by 15.7 percentage points.", "metrics": [{"label": "CMAP", "value": "83.7%"}, {"label": "Gain", "value": "+15.7"}]}
         ]
       },
       {
         "id": "sensitivity",
         "title": "Configuration sensitivity",
-        "description": "Advance from 01 to 04 to inspect the selected context mask, regeneration-pass count, span length, and temporal-aggregation setting reported in the paper.",
+        "description": "Advance from 01 to 04 to inspect the selected history-mask rate, regeneration-pass count, span length, and temporal-aggregation setting.",
         "chart": {
           "type": "bar",
-          "title": "Selected settings on four RoboTwin tasks",
+          "title": "Selected settings on three RoboTwin tasks",
           "y_label": "Macro-average success rate (%)",
           "y_min": 0,
-          "y_max": 80,
+          "y_max": 100,
           "y_step": 20,
           "categories": ["Context mask", "Regen. passes", "Span length", "Temporal aggregation"],
-          "series": [
-            {"label": "Selected setting", "color": "#e66c4f", "values": [68.5, 71.3, 72.0, 59.3]}
-          ],
-          "source_note": "Replotted from the manuscript sensitivity sweep. Each stage shows the selected setting and the alternatives evaluated in that sweep."
+          "series": [{"label": "Selected setting", "color": "#e66c4f", "values": [83.7, 83.7, 83.7, 83.7]}],
+          "source_note": "Each stage shows the selected setting from the revised three-task sensitivity sweep."
         },
         "items": [
-          {
-            "label": "Context mask",
-            "eyebrow": "ρ = 0",
-            "description": "Keeping all valid executed-action history visible is selected over masking 30% or 60% of the context.",
-            "metrics": [{"label": "Selected", "value": "68.5%"}, {"label": "ρ = 0.3 / 0.6", "value": "67.3 / 68.3"}]
-          },
-          {
-            "label": "Regen. passes",
-            "eyebrow": "P = 1",
-            "description": "One regeneration pass achieves the strongest result, outperforming both no regeneration and two passes.",
-            "metrics": [{"label": "Selected", "value": "71.3%"}, {"label": "P = 0 / 2", "value": "57.8 / 68.5"}]
-          },
-          {
-            "label": "Span length",
-            "eyebrow": "L = 8",
-            "description": "An 8-action regeneration span is selected over 12- and 16-action spans.",
-            "metrics": [{"label": "Selected", "value": "72.0%"}, {"label": "L = 12 / 16", "value": "68.5 / 63.8"}]
-          },
-          {
-            "label": "Temporal aggregation",
-            "eyebrow": "Aggregation on",
-            "description": "At per-step replanning, merging overlapping action chunks is essential for stable execution.",
-            "metrics": [{"label": "On", "value": "59.3%"}, {"label": "Off", "value": "0.3%"}]
-          }
+          {"label": "Context mask", "eyebrow": "ρ = 0", "description": "Keeping the complete executed history visible outperforms masking 30% or 60% of historical actions.", "metrics": [{"label": "Selected", "value": "83.7%"}, {"label": "ρ = 0.3 / 0.6", "value": "74.3 / 67.7"}]},
+          {"label": "Regen. passes", "eyebrow": "P = 1", "description": "One local reconstruction gives the strongest result in the pass-count sweep.", "metrics": [{"label": "Selected", "value": "83.7%"}, {"label": "P = 0 / 2", "value": "68.3 / 75.7"}]},
+          {"label": "Span length", "eyebrow": "L = 8", "description": "An 8-action interval concentrates correction and retains more surrounding coarse actions as context.", "metrics": [{"label": "Selected", "value": "83.7%"}, {"label": "L = 12 / 16", "value": "68.3 / 61.3"}]},
+          {"label": "Temporal aggregation", "eyebrow": "Aggregation on", "description": "With per-step replanning, combining overlapping chunks is essential for stable execution.", "metrics": [{"label": "On", "value": "83.7%"}, {"label": "Off", "value": "0.0%"}]}
+        ]
+      },
+      {
+        "id": "local_regeneration",
+        "title": "Local regeneration",
+        "description": "Inspect how one regeneration pass changes the error inside the selected span on held-out demonstrations.",
+        "chart": {
+          "type": "bar",
+          "title": "Mean selected-span MSE reduction",
+          "y_label": "Reduction after regeneration (%)",
+          "y_min": 0,
+          "y_max": 45,
+          "y_step": 10,
+          "categories": ["Open Microwave", "Click Alarm Clock", "Open Laptop"],
+          "series": [{"label": "MSE reduction", "color": "#6f63a7", "values": [21.7, 22.1, 39.3]}],
+          "source_note": "One regeneration pass reduces normalized-action MSE within the same selected spans; surrounding predictions are unchanged."
+        },
+        "items": [
+          {"label": "Open Microwave", "eyebrow": "Held-out trajectories", "description": "Regeneration reduces mean normalized-action MSE inside the selected interval by 21.7%.", "metrics": [{"label": "MSE reduction", "value": "21.7%"}]},
+          {"label": "Click Alarm Clock", "eyebrow": "Held-out trajectories", "description": "Regeneration reduces mean normalized-action MSE inside the selected interval by 22.1%.", "metrics": [{"label": "MSE reduction", "value": "22.1%"}]},
+          {"label": "Open Laptop", "eyebrow": "Held-out trajectories", "description": "Regeneration reduces mean normalized-action MSE inside the selected interval by 39.3%.", "metrics": [{"label": "MSE reduction", "value": "39.3%"}]}
         ]
       }
     ],
-    "detail": "Per prediction cycle, CMAP regenerates one 8-action span within a 50-step RoboTwin chunk and one 8-action span within a 30-step ManiSkill chunk. The reported deployment configuration uses one regeneration pass; RoboTwin also enables temporal aggregation with per-step replanning."
+    "detail": "The default configuration uses the full executed history (ρ = 0), one regeneration pass (P = 1), an 8-action interval (L = 8), and temporal aggregation. Guided selection produces mean post-/pre-regeneration error ratios below one on all three held-out tasks, unlike fixed or random intervals."
   },
   "success_failure": {
-    "heading": "Success and Failure Cases",
-    "summary": "Physical execution pairs on AGIBOT G1 and Kuavo 4 Pro isolate four contact failures and one recovered near-failure. Successful examples establish centered contact and maintain object alignment; the remaining difficult cases concentrate around contact geometry, grasp closure, object alignment, and sustained support.",
+    "heading": "Success, Failure, and Recovery",
+    "summary": "The revised qualitative analysis contrasts successful physical execution with a cup-separation failure and a recovered Sheet Loading near-failure, highlighting two distinct contact challenges.",
     "cases": [
-      {"task": "Cup Separation", "failure": "Missed rim contact", "description": "The gripper enters the cup opening without establishing stable rim contact, preventing clean separation."},
-      {"task": "Bell Press", "failure": "Off-center press", "description": "Off-center contact redirects the applied force and fails to fully depress the button."},
-      {"task": "Chess Grasp", "failure": "Incomplete closure", "description": "The chess-piece grasp misses a stable opposing contact."},
-      {"task": "Bottle Grasp", "failure": "Tilted grasp", "description": "The bottle is acquired at a tilted pose that can cause slip or collision before placement."},
-      {"task": "Sheet Loading", "failure": "Recovered single-point support", "description": "The sheet briefly relies on unstable single-point support, but the policy recovers the transport and placement sequence."}
+      {"task": "Cup Separation", "failure": "Rim contact not secured", "description": "The gripper closes without securing the cup rim, so continued lifting cannot produce a successful separation grasp."},
+      {"task": "Sheet Loading", "failure": "Recovered single-point support", "description": "The sheet briefly relies on unstable single-point support; closed-loop replanning recovers while preserving the remaining contact."}
     ],
-    "extension": "The current policy has no direct tactile or force measurements. The remaining failures motivate contact-sensitive span-selection scores and a recovery controller that can reopen a new interval when the expected contact event is absent."
+    "extension": "These cases motivate incorporating contact information into span selection and adapting the regeneration interval to the correction duration required by each task."
   }
 }

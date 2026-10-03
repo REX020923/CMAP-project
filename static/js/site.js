@@ -17,7 +17,9 @@ const formatValue = (value) => (typeof value === "number" ? value.toFixed(1) : v
 
 function paperTitleMarkup(title) {
   const text = String(title);
-  const preferredBreak = text.indexOf(" Modeling for ");
+  const preferredBreak = [" with ", " Modeling for "]
+    .map((separator) => text.indexOf(separator))
+    .find((index) => index !== -1) ?? -1;
   if (preferredBreak === -1) return escapeHtml(text);
 
   return `<span>${escapeHtml(text.slice(0, preferredBreak))}</span><span>${escapeHtml(text.slice(preferredBreak + 1))}</span>`;
@@ -215,7 +217,7 @@ function renderSimulation(paper, media) {
       </div>
       ${
         videos.length
-          ? `<div class="subsection-heading"><div><span>Recorded rollouts</span><h3>Simulation videos</h3></div><p>Twelve selected clips spanning every task, plus one alternate Handover Mic rollout.</p></div>
+          ? `<div class="subsection-heading"><div><span>Recorded rollouts</span><h3>Simulation videos</h3></div><p>Selected clips cover every task in the current six-task RoboTwin and three-task ManiSkill evaluation, with one alternate Handover Mic rollout.</p></div>
              ${mediaFilter(videos, "simulation-video-grid")}
              <div class="video-grid simulation-video-grid" id="simulation-video-grid">${videos.map(videoCard).join("")}</div>`
           : ""
@@ -578,7 +580,6 @@ function renderCases(paper, media) {
   return `
     <section class="section" id="cases" aria-labelledby="cases-heading">
       ${sectionIntro(6, "Qualitative evidence", section.heading, section.summary).replace("<h2>", '<h2 id="cases-heading">')}
-      ${paperFigure(paper.figures.success_failure, "wide-figure")}
       <div class="case-grid">
         ${section.cases
           .map(

@@ -3,8 +3,6 @@
   "introduction_video": null,
   "method_video": null,
   "simulation_videos": [
-    {"id": "robotwin-beat-block-hammer", "group": "RoboTwin", "type": "CMAP rollout", "title": "Beat Block Hammer", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-beat-block-hammer.mp4"},
-    {"id": "robotwin-pick-dual-bottles", "group": "RoboTwin", "type": "CMAP rollout", "title": "Pick Dual Bottles", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-pick-dual-bottles.mp4"},
     {"id": "robotwin-handover-mic", "group": "RoboTwin", "type": "CMAP rollout", "title": "Handover Mic", "note": "One representative episode from the paper-aligned evaluation run.", "src": "assets/videos/robotwin-handover-mic.mp4"},
     {"id": "robotwin-handover-mic-alternate", "group": "RoboTwin", "type": "Additional rollout", "title": "Handover Mic · Alternate", "note": "A second representative episode showing rollout variation on the same task.", "src": "assets/videos/robotwin-handover-episode-2.mp4"},
     {"id": "robotwin-stack-two-blocks", "group": "RoboTwin", "type": "CMAP rollout", "title": "Stack Two Blocks", "note": "One representative episode from the CMAP evaluation run.", "src": "assets/videos/robotwin-stack-two-blocks.mp4"},

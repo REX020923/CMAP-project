@@ -92,6 +92,7 @@ def latex_to_text(value: str) -> str:
     text = re.sub(r"\\(?:LARGE|Large|large|bf|it|rm|fullerpar)\b", "", text)
     text = re.sub(r"\\(?:citep|citet|cite|ref)\s*\{[^{}]*\}", "", text)
     text = re.sub(r"\\mathcal\s*\{([^{}]*)\}", r"\1", text)
+    text = re.sub(r"\\\\(?:\[[^\]]*\])?", " ", text)
     text = text.replace(r"\%", "%").replace(r"\&", "&").replace("~", " ")
     text = text.replace("$", "").replace("--", "-")
     text = re.sub(r"\\[A-Za-z@]+(?:\[[^\]]*\])?", "", text)
@@ -141,7 +142,15 @@ def collect_tex_tree(root_tex: Path, paper_root: Path) -> list[Path]:
             relative = Path(match.group(1))
             if not relative.suffix:
                 relative = relative.with_suffix(".tex")
-            visit((resolved.parent / relative).resolve())
+            # LaTeX resolves project paths from the compilation directory,
+            # while some projects use paths relative to the including file.
+            # Support both conventions without ever leaving paper_root.
+            candidates = [
+                (paper_root / relative).resolve(),
+                (resolved.parent / relative).resolve(),
+            ]
+            referenced = next((candidate for candidate in candidates if candidate.is_file()), candidates[0])
+            visit(referenced)
 
     visit(root_tex)
     return ordered
@@ -212,13 +221,16 @@ def safe_destination(relative_path: str) -> Path:
 
 
 def copy_selected_assets(
-    paper_root: Path, manifest: dict[str, Any], captions: dict[str, str]
+    paper_root: Path,
+    manifest: dict[str, Any],
+    captions: dict[str, str],
+    copy_assets: bool = True,
 ) -> tuple[dict[str, Any], list[str]]:
     figures: dict[str, Any] = {}
     copied: list[str] = []
     for item in manifest.get("assets", []):
         destination = safe_destination(item["destination"])
-        if item.get("copy", True):
+        if copy_assets and item.get("copy", True):
             source = (paper_root / Path(item["source"])).resolve()
             if paper_root not in source.parents:
                 raise SyncError("Asset source escapes the paper repository.")
@@ -245,7 +257,11 @@ def copy_selected_assets(
 
 
 def build_paper_data(
-    paper_root: Path, root_tex: Path, tex_files: list[Path], manifest: dict[str, Any]
+    paper_root: Path,
+    root_tex: Path,
+    tex_files: list[Path],
+    manifest: dict[str, Any],
+    copy_assets: bool = True,
 ) -> tuple[dict[str, Any], list[str]]:
     root_text = strip_comments(root_tex.read_text(encoding="utf-8"))
     combined = "\n".join(strip_comments(path.read_text(encoding="utf-8")) for path in tex_files)
@@ -257,7 +273,7 @@ def build_paper_data(
         raise SyncError("Title, abstract, or keywords could not be extracted from the root manuscript.")
 
     captions = extract_figures(combined)
-    figures, copied = copy_selected_assets(paper_root, manifest, captions)
+    figures, copied = copy_selected_assets(paper_root, manifest, captions, copy_assets)
     bibliography = find_bibliography(root_text, paper_root)
     pdf = find_compiled_pdf(root_tex, paper_root)
 
@@ -287,6 +303,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--paper-root", help="Path to the external manuscript repository.")
     parser.add_argument("--root-tex", help="Optional root TeX path relative to the paper repository.")
+    parser.add_argument(
+        "--metadata-only",
+        action="store_true",
+        help="Refresh manuscript text and captions without copying configured assets.",
+    )
     return parser.parse_args(argv)
 
 
@@ -297,7 +318,13 @@ def main(argv: list[str] | None = None) -> int:
         root_tex = find_root_tex(paper_root, args.root_tex)
         tex_files = collect_tex_tree(root_tex, paper_root)
         manifest = read_json(MANIFEST_PATH)
-        data, copied = build_paper_data(paper_root, root_tex, tex_files, manifest)
+        data, copied = build_paper_data(
+            paper_root,
+            root_tex,
+            tex_files,
+            manifest,
+            copy_assets=not args.metadata_only,
+        )
         GENERATED_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     except SyncError as exc:
         print(f"Synchronization failed: {exc}", file=sys.stderr)
@@ -311,7 +338,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"- bibliography: {data['source']['bibliography'] or 'not detected'}")
     print("Updated:")
     print("- title, abstract, keywords, section names, and figure captions")
-    print(f"- {len(copied)} selected website assets")
+    if args.metadata_only:
+        print("- no website assets copied (metadata-only mode)")
+    else:
+        print(f"- {len(copied)} selected website assets")
     print("Manual review required:")
     print("- experimental aggregate values in data/paper.curated.json")
     print("- publication metadata and BibTeX")

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -62,7 +63,25 @@ def internal_asset_paths(paper: dict[str, Any], site: dict[str, Any], media: dic
 def check_public_path_leaks(errors: list[str]) -> None:
     pattern = re.compile(r"[A-Za-z]:\\Users\\[^\\\s]+", re.IGNORECASE)
     extensions = {".html", ".css", ".js", ".json", ".md", ".py"}
-    for path in WEBSITE_ROOT.rglob("*"):
+    try:
+        result = subprocess.run(
+            [
+                "git",
+                "-c",
+                f"safe.directory={WEBSITE_ROOT.as_posix()}",
+                "ls-files",
+                "-z",
+            ],
+            cwd=WEBSITE_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        public_files = [WEBSITE_ROOT / value for value in result.stdout.split("\0") if value]
+    except (OSError, subprocess.CalledProcessError):
+        public_files = list(WEBSITE_ROOT.rglob("*"))
+
+    for path in public_files:
         if not path.is_file() or path.suffix.lower() not in extensions:
             continue
         if path.name == "local.json" or ".git" in path.parts:
