@@ -1,5 +1,14 @@
 {
-  "hero_video": null,
+  "hero_video": {
+    "id": "cmap-paper-video",
+    "group": "CMAP",
+    "type": "Paper video",
+    "title": "CMAP in 100 Seconds",
+    "note": "A concise visual overview of history-conditioned action prediction and uncertainty-guided span regeneration.",
+    "src": "assets/videos/cmap-paper-overview.mp4",
+    "poster": "assets/figures/cmap-video-poster.jpg",
+    "preload": "metadata"
+  },
   "introduction_video": null,
   "method_video": null,
   "simulation_videos": [

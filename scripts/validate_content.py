@@ -56,8 +56,11 @@ def internal_asset_paths(paper: dict[str, Any], site: dict[str, Any], media: dic
     for key, value in media.items():
         records = value if isinstance(value, list) else ([value] if isinstance(value, dict) else [])
         for record in records:
-            if record and record.get("src"):
-                paths.add(record["src"])
+            if not record:
+                continue
+            for key in ("src", "poster"):
+                if record.get(key):
+                    paths.add(record[key])
     return paths
 
 

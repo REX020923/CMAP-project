@@ -171,10 +171,12 @@ function resultsTable(table) {
 }
 
 function videoCard(item) {
+  const poster = item.poster ? ` poster="${escapeHtml(item.poster)}"` : "";
+  const preload = escapeHtml(item.preload || "metadata");
   return `
     <article class="video-card" data-media-group="${escapeHtml(item.group)}">
       <div class="video-frame">
-        <video controls autoplay muted loop playsinline preload="auto" aria-label="${escapeHtml(item.title)} rollout video">
+        <video controls autoplay muted loop playsinline preload="${preload}"${poster} aria-label="${escapeHtml(item.title)} video">
           <source src="${escapeHtml(item.src)}" type="video/mp4" />
         </video>
       </div>

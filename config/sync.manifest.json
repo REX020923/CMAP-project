@@ -9,6 +9,8 @@
     {"kind": "figure", "key": "agibot", "label": "fig:realworld_rollouts", "source": "figures/paper/fig6_agibot_tasks_grid.png", "destination": "assets/figures/fig6-agibot-tasks.png", "alt": "Representative AGIBOT G1 physical rollouts."},
     {"kind": "figure", "key": "success_failure", "label": "fig:realworld_failures", "source": "figures/paper/fig7_realworld_success_failure_grid.png", "destination": "assets/figures/fig7-success-failure.png", "alt": "AGIBOT G1 success-failure pairs with contact errors marked."},
     {"kind": "paper", "source": "main_ral.pdf", "destination": "assets/paper/cmap-paper.pdf"},
+    {"kind": "video", "copy": false, "destination": "assets/videos/cmap-paper-overview.mp4"},
+    {"kind": "image", "copy": false, "destination": "assets/figures/cmap-video-poster.jpg"},
     {"kind": "video", "source": "figures/source/maniskill_rollouts/PushCube.mp4", "destination": "assets/videos/maniskill-push-cube.mp4"},
     {"kind": "video", "source": "figures/source/maniskill_rollouts/StackCube.mp4", "destination": "assets/videos/maniskill-stack-cube.mp4"},
     {"kind": "video", "source": "figures/source/maniskill_rollouts/PullCube.mp4", "destination": "assets/videos/maniskill-pull-cube.mp4"},
