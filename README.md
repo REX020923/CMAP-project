@@ -1,6 +1,6 @@
 # CMAP project website
 
-This repository is the presentation layer for **CMAP: Contextual Masked Action Policy with Uncertainty-guided Local Regeneration**. The manuscript repository remains external and read only. The website consumes synchronized metadata, captions, selected figures, the current anonymous manuscript PDF, and selected rollout videos.
+This repository is the presentation layer for **Predict in Chunks, Revise in Spans: History-conditioned Action Regeneration for Robotic Manipulation (CMAP)**. The manuscript repository remains external and read only. The website consumes synchronized metadata, captions, selected figures, the current anonymous manuscript PDF, and selected rollout videos.
 
 ## Preview locally
 

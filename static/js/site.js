@@ -17,7 +17,7 @@ const formatValue = (value) => (typeof value === "number" ? value.toFixed(1) : v
 
 function paperTitleMarkup(title) {
   const text = String(title);
-  const preferredBreak = [" with ", " Modeling for "]
+  const preferredBreak = [" Action Regeneration ", " with ", " Modeling for "]
     .map((separator) => text.indexOf(separator))
     .find((index) => index !== -1) ?? -1;
   if (preferredBreak === -1) return escapeHtml(text);

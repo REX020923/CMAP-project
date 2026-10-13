@@ -109,17 +109,30 @@ def find_root_tex(paper_root: Path, explicit_name: str | None = None) -> Path:
             raise SyncError("Requested root TeX file does not exist.")
         return candidate
 
-    candidates: list[Path] = []
-    for path in paper_root.rglob("*.tex"):
+    def is_cmap_root(path: Path) -> bool:
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             text = path.read_text(encoding="utf-8-sig")
-        if "\\begin{document}" in text and "CMAP:" in text:
+        return "\\begin{document}" in text and (
+            "Contextual Masked Action Policy" in text
+            or "\\textbf{CMAP}" in text
+            or "CMAP:" in text
+        )
+
+    # Prefer the conventional root file. A recursive newest-file heuristic can
+    # otherwise select a timestamped backup or an exported arXiv bundle.
+    preferred = paper_root / "main_ral.tex"
+    if preferred.is_file() and is_cmap_root(preferred):
+        return preferred
+
+    candidates: list[Path] = []
+    for path in paper_root.rglob("*.tex"):
+        if is_cmap_root(path):
             candidates.append(path)
     if not candidates:
         raise SyncError("No CMAP root manuscript with \\begin{document} was found.")
-    candidates.sort(key=lambda path: (path.stat().st_mtime_ns, -len(path.parts)), reverse=True)
+    candidates.sort(key=lambda path: (len(path.relative_to(paper_root).parts), -path.stat().st_mtime_ns))
     return candidates[0]
 
 
@@ -228,14 +241,22 @@ def copy_selected_assets(
 ) -> tuple[dict[str, Any], list[str]]:
     figures: dict[str, Any] = {}
     copied: list[str] = []
-    for item in manifest.get("assets", []):
-        destination = safe_destination(item["destination"])
-        if copy_assets and item.get("copy", True):
+    if copy_assets:
+        # Check every configured source before writing anything so a missing
+        # late-list asset cannot leave the website half synchronized.
+        for item in manifest.get("assets", []):
+            if not item.get("copy", True):
+                continue
             source = (paper_root / Path(item["source"])).resolve()
             if paper_root not in source.parents:
                 raise SyncError("Asset source escapes the paper repository.")
             if not source.is_file():
                 raise SyncError(f"Required source asset is missing: {item['source']}")
+
+    for item in manifest.get("assets", []):
+        destination = safe_destination(item["destination"])
+        if copy_assets and item.get("copy", True):
+            source = (paper_root / Path(item["source"])).resolve()
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, destination)
             copied.append(item["destination"])

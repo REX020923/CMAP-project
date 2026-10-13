@@ -11,6 +11,7 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any, Iterable
+from urllib.parse import urlsplit
 
 
 WEBSITE_ROOT = Path(__file__).resolve().parents[1]
@@ -105,7 +106,7 @@ def check_html_links(errors: list[str]) -> None:
             errors.append(f"broken page anchor: {link}")
         elif link.startswith(("http://", "https://", "mailto:", "#")):
             continue
-        elif not (WEBSITE_ROOT / link).exists():
+        elif not (WEBSITE_ROOT / urlsplit(link).path).exists():
             errors.append(f"broken internal HTML link: {link}")
 
 

@@ -726,8 +726,8 @@
     ],
     "extension": "These cases motivate incorporating contact information into span selection and adapting the regeneration interval to the correction duration required by each task."
   },
-  "title": "CMAP: Contextual Masked Action Policy with Uncertainty-guided Local Regeneration",
-  "abstract": "Reliable manipulation requires temporally coherent actions. Existing action-chunking policies typically predict future commands from current observations and treat the resulting chunk as a whole during revision. However, conditioning only on current observations can leave the continuity between executed and newly predicted actions ambiguous. Moreover, whole-chunk revision makes it difficult to correct localized errors without replacing predictions that remain valid. To alleviate these issues, we propose Contextual Masked Action Policy (CMAP), a framework for history-conditioned local revision of continuous action chunks. Specifically, CMAP introduces (i) a History-conditioned Action Tape (HCAT) that combines executed commands with masked future positions to predict coarse actions and per-step uncertainty scores, (ii) Uncertainty-guided Span Regeneration (UGSR) that selects the highest-scoring contiguous interval and regenerates only that interval while preserving all remaining actions. CMAP achieves mean success rates of 71.7% on six RoboTwin tasks and 53.3% on ManiSkill, outperforming the compared baselines on both benchmarks. Moreover, CMAP achieves a mean success rate of 76.0% in real-robot experiments on AGIBOT G1 and Leju Kuavo 4 Pro. Together, these results show that history-conditioned local regeneration improves manipulation success while preserving unselected action predictions.",
+  "title": "Predict in Chunks, Revise in Spans: History-conditioned Action Regeneration for Robotic Manipulation",
+  "abstract": "Action chunking improves temporal coherence in visuomotor imitation learning by jointly predicting sequences of future actions. However, many existing policies regenerate entire action chunks even when errors are localized, potentially replacing otherwise valid predictions. We introduce Contextual Masked Action Policy (CMAP), a visuomotor policy that refines continuous action chunks through history-conditioned local regeneration. Specifically, CMAP introduces a history-conditioned action tape that combines executed commands with masked future positions to produce coarse action predictions and per-step uncertainty scores. An uncertainty-guided span regeneration mechanism then selects a high-uncertainty contiguous span and reconstructs it using the executed history and retained future predictions as context. By jointly reconstructing neighboring actions, CMAP models local temporal dependencies while preserving all predictions outside the selected span. Extensive experiments on nine simulated and four real-world manipulation tasks demonstrate that CMAP achieves superior overall performance over several competitive baselines. Ablation studies validate the complementary contributions of its key components, while held-out trajectory analysis shows that local regeneration reduces prediction errors within selected spans.",
   "keywords": [
     "Imitation Learning",
     "Machine Learning for Robot Control",
@@ -796,7 +796,7 @@
     "root_tex": "main_ral.tex",
     "compiled_pdf": "main_ral.pdf",
     "bibliography": "ref.bib",
-    "tex_digest_sha256": "5e52b5ad12eacfb251f532ee94a23141514d707d00184060725b53b5a0baa203",
-    "generated_date": "2026-10-03"
+    "tex_digest_sha256": "63497ec61682c800983a21a05d336e950441159b7bc6197140c668f5587ab6ac",
+    "generated_date": "2026-10-13"
   }
 }

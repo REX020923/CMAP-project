@@ -113,7 +113,7 @@ figure { margin: 0; }
 h1, h2, h3 { margin-top: 0; text-wrap: balance; }
 h1 {
   font-family: var(--serif);
-  font-size: clamp(2.45rem, 4.6vw, 4.35rem);
+  font-size: clamp(2.45rem, 4.2vw, 3.45rem);
   font-weight: 600;
   letter-spacing: -0.045em;
   line-height: 1.02;

@@ -12,10 +12,10 @@
     {"kind": "video", "source": "figures/source/maniskill_rollouts/PushCube.mp4", "destination": "assets/videos/maniskill-push-cube.mp4"},
     {"kind": "video", "source": "figures/source/maniskill_rollouts/StackCube.mp4", "destination": "assets/videos/maniskill-stack-cube.mp4"},
     {"kind": "video", "source": "figures/source/maniskill_rollouts/PullCube.mp4", "destination": "assets/videos/maniskill-pull-cube.mp4"},
-    {"kind": "video", "source": "output/remote_rollouts/handover_episode0.mp4", "destination": "assets/videos/robotwin-handover-episode-1.mp4"},
-    {"kind": "video", "source": "output/remote_rollouts/handover_episode1.mp4", "destination": "assets/videos/robotwin-handover-episode-2.mp4"},
-    {"kind": "video", "source": "output/remote_rollouts/place_episode0.mp4", "destination": "assets/videos/robotwin-place-episode-1.mp4"},
-    {"kind": "video", "source": "output/remote_rollouts/place_episode1.mp4", "destination": "assets/videos/robotwin-place-episode-2.mp4"},
-    {"kind": "video", "source": "output/remote_rollouts/place_episode2.mp4", "destination": "assets/videos/robotwin-place-episode-3.mp4"}
+    {"kind": "video", "source": "output/remote_rollouts/handover_episode0.mp4", "copy": false, "destination": "assets/videos/robotwin-handover-episode-1.mp4"},
+    {"kind": "video", "source": "output/remote_rollouts/handover_episode1.mp4", "copy": false, "destination": "assets/videos/robotwin-handover-episode-2.mp4"},
+    {"kind": "video", "source": "output/remote_rollouts/place_episode0.mp4", "copy": false, "destination": "assets/videos/robotwin-place-episode-1.mp4"},
+    {"kind": "video", "source": "output/remote_rollouts/place_episode1.mp4", "copy": false, "destination": "assets/videos/robotwin-place-episode-2.mp4"},
+    {"kind": "video", "source": "output/remote_rollouts/place_episode2.mp4", "copy": false, "destination": "assets/videos/robotwin-place-episode-3.mp4"}
   ]
 }
